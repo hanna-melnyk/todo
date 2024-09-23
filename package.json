@@ -4,14 +4,16 @@
   "description": "��#\u0000 \u0000t\u0000o\u0000d\u0000o\u0000\r\u0000 \u0000",
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "client": "npm --prefix client run dev",
     "server": "npm --prefix server run dev",
+    "client": "npm --prefix client run dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "concurrently": "^9.0.1"
+    "@nextui-org/react": "^2.4.8",
+    "concurrently": "^9.0.1",
+    "framer-motion": "^11.5.6"
   }
 }

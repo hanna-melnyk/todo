@@ -11,5 +11,10 @@ export default defineConfig({
         changeOrigin: true
       },
     },
+    watch: {
+      usePolling: true,   // Enable polling to detect file changes
+    },
+    hmr: true, // Ensure HMR is enabled
   },
+
 })
