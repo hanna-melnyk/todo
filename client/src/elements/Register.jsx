@@ -2,7 +2,6 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
 import { Box, FormControl, FormLabel, Input, Button, Text } from '@chakra-ui/react';
 
 export const Register = () => {
@@ -11,7 +10,6 @@ export const Register = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const navigate = useNavigate();
-    const { setToken, setIsLoggedIn } = useContext(AuthContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

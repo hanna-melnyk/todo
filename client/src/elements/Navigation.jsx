@@ -1,8 +1,8 @@
 // client/src/components/Navigation.jsx
 import React, {useContext} from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import {AuthContext} from "../context/AuthContext.jsx";
-import {Box, Button, HStack, Link, useColorMode, useColorModeValue} from '@chakra-ui/react';
+import {Box, Button, HStack, Link, useColorMode, useColorModeValue, IconButton} from '@chakra-ui/react';
+import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 
 // Links for authorized users
 /* Use logout function from context */
@@ -32,9 +32,15 @@ const GuestLinks = () => (
 
 
 export const Navigation = () => {
-    const { isLoggedIn, logout } = useContext(AuthContext);
     const { colorMode, toggleColorMode } = useColorMode(); // Get color mode and toggle function
-    const colorModeLabel = colorMode === 'light' ? 'Dark' : 'Light'; // Determine label for the toggle button
+    const icon = colorMode === 'light' ? <MoonIcon /> : <SunIcon />;
+    const storedUserInfo = JSON.parse(localStorage.getItem('userInfo'));
+    const isLoggedIn = !!storedUserInfo && !!storedUserInfo.token; // Determine if logged in based on localStorage
+
+    const handleLogout = () => {
+        localStorage.removeItem('userInfo');
+        window.location.reload();
+    };
 
     return (
         <Box as="nav" bg={useColorModeValue('gray.100', 'gray.900')} p={4}>
@@ -43,11 +49,14 @@ export const Navigation = () => {
                     <Link as={RouterLink} to="/">
                         Home
                     </Link>
-                    {isLoggedIn ? <AuthLinks handleLogout={logout} /> : <GuestLinks />}
+                    {isLoggedIn ? <AuthLinks handleLogout={handleLogout} /> : <GuestLinks />}
                 </HStack>
-                <Button onClick={toggleColorMode} colorScheme="teal">
-                    Toggle {colorModeLabel} Mode
-                </Button>
+                <IconButton
+                    aria-label={`Toggle ${colorMode === 'light' ? 'Dark' : 'Light'} Mode`}
+                    icon={icon}
+                    onClick={toggleColorMode}
+                    colorScheme="teal"
+                />
             </HStack>
         </Box>
     );

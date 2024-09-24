@@ -1,9 +1,7 @@
 // client/src/elements/Login.jsx
 import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import {AuthContext} from "../context/AuthContext.jsx";
-import { useAxiosInterceptor } from '../api/axiosTokenInterceptor';
+import authApi from '../api/axiosTokenInterceptor';
 import { Box, FormControl, FormLabel, Input, Button, Text } from '@chakra-ui/react';
 
 export const Login = () => {
@@ -11,22 +9,21 @@ export const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const navigate = useNavigate();
-    const { setToken, setIsLoggedIn } = useContext(AuthContext); // Get context functions
-    const authApi = useAxiosInterceptor();
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await authApi.post('/login', { email, password });
-            localStorage.setItem('userInfo', JSON.stringify(response.data));
-            // Set token and login status in AuthContext
-            setToken(response.data.token);
-            setIsLoggedIn(true);
+            localStorage.removeItem('userInfo'); // Clear old token if any
 
+            const response = await authApi.post('/login', { email, password });
+            console.log(`Token received from server: ${response.data.token}`);
+
+            // Store the new token and user info in localStorage
+            localStorage.setItem('userInfo', JSON.stringify(response.data));
 
             setError(null);  // Clear any previous errors
-            navigate('/');  // Redirect to profile page on success
+            navigate('/');  // Redirect to home page on success
         } catch (error) {
             setError('Invalid email or password');
         }

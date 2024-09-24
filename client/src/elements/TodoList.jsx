@@ -1,14 +1,11 @@
 //client/src/elements/TodoList.jsx
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAxiosInterceptor } from "../api/axiosTokenInterceptor.js";
-import { AuthContext } from '../context/AuthContext';
+import authApi from '../api/axiosTokenInterceptor';
 import { Box, Button, Input, List, ListItem, Text, Checkbox, IconButton, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, HStack  } from '@chakra-ui/react';
 import { EditIcon, DeleteIcon } from '@chakra-ui/icons';
 
 export const TodoList = () => {
-    const { isLoggedIn } = useContext(AuthContext);
-    const authApi = useAxiosInterceptor();
     const [todos, setTodos] = useState([]);
     const [newTodo, setNewTodo] = useState('');
     const [editTodo, setEditTodo] = useState(null);
@@ -16,6 +13,9 @@ export const TodoList = () => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const { isOpen, onOpen, onClose } = useDisclosure();  // useDisclosure for modal control
+
+    const storedUserInfo = JSON.parse(localStorage.getItem('userInfo'));
+    const isLoggedIn = !!storedUserInfo && !!storedUserInfo.token; // Check if logged in
 
     // If the user is not logged in, redirect to the login page
     useEffect(() => {
@@ -124,13 +124,18 @@ export const TodoList = () => {
                 {todos.length > 0 ? (
                     todos.map(todo => (
                         <ListItem key={todo._id} mb={2} display="flex" justifyContent="space-between" alignItems="center">
-                            <HStack flex="1" spacing={5}>
+                            <HStack flex="1" spacing={5} onClick={() => toggleTodo(todo)} cursor="pointer">
                                 <Checkbox
                                     isChecked={todo.completed}
-                                    onChange={() => toggleTodo(todo)}
                                     colorScheme="teal"
+                                    pointerEvents="none"
+                                    size="lg"
                                 />
-                                <Text>{todo.text}</Text>
+                                <Text
+                                    textDecoration={todo.completed ? "line-through" : "none"}
+                                    color={todo.completed ? "gray.500" : "black"}
+                                    fontSize="lg"
+                                >{todo.text}</Text>
                             </HStack>
                             <HStack spacing={2}>
                                 <IconButton

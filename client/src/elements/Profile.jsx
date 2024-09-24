@@ -1,10 +1,9 @@
 // client/src/elements/Profile.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAxiosInterceptor } from "../api/axiosTokenInterceptor.js"; // Use your custom Axios instance
+import authApi from '../api/axiosTokenInterceptor';
 
 export const Profile = () => {
-    const authApi = useAxiosInterceptor(); // Axios instance with the interceptor that attaches the token
     const [user, setUser] = useState(null); // State to hold user data
     const [error, setError] = useState(null); // State to hold any error message
     const navigate = useNavigate(); // For navigation redirection
