@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {useAxiosInterceptor} from "../api/axiosTokenInterceptor.js";
 import { AuthContext } from '../context/AuthContext';
+import { Box, Button, Input, List, ListItem, Text } from '@chakra-ui/react';
 
 export const TodoList = () => {
     const { isLoggedIn } = useContext(AuthContext); // Check if the user is logged in
@@ -83,29 +84,29 @@ export const TodoList = () => {
     }
 
     return (
-        <div>
-            <h1>Todo List</h1>
-            <input
+        <Box maxW="sm" mx="auto" mt={8} p={4} borderWidth="1px" borderRadius="lg">
+            <Text fontSize="2xl" mb={4}>Todo List</Text>
+            <Input
                 type="text"
                 value={newTodo}
                 onChange={(e) => setNewTodo(e.target.value)}
                 placeholder="Add a new todo"
+                mb={4}
             />
-            <button onClick={addTodo}>Add Todo</button>
-
-            <ul>
+            <Button onClick={addTodo} colorScheme="teal" width="full" mb={4}>Add Todo</Button>
+            <List>
                 {todos.length > 0 ? (
                     todos.map(todo => (
-                        <li key={todo._id}>
+                        <ListItem key={todo._id} mb={2} display="flex" justifyContent="space-between">
                             {todo.text}
-                            <button onClick={() => deleteTodo(todo._id)}>Delete</button>
-                        </li>
+                            <Button colorScheme="red" onClick={() => deleteTodo(todo._id)}>Delete</Button>
+                        </ListItem>
                     ))
                 ) : (
-                    <p>No todos available</p> // Display message if there are no todos
+                    <Text>No todos available</Text>
                 )}
-            </ul>
-        </div>
+            </List>
+        </Box>
     );
 };
 

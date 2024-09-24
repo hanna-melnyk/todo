@@ -13,7 +13,8 @@ export const Profile = () => {
         const fetchProfile = async () => {
             try {
                 // Fetch the profile using the authApi (Axios instance with token automatically attached)
-                const { data } = await authApi.get('/api/profile');
+                /* changed path from '/api/profile', because useAxiosInterceptor sets /api as a base url*/
+                const { data } = await authApi.get('/profile');
                 setUser(data); // Set the user data in state
             } catch (error) {
                 // Handle any error (e.g., invalid token or network issues)

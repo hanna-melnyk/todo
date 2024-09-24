@@ -5,10 +5,12 @@ import { Navigation } from './elements/Navigation';
 import {AuthProvider} from "./context/AuthContext.jsx";
 import AppRoutes from './AppRoutes';
 
+
 function App() {
 
     /* Use logout function from context */
     return (
+
         <AuthProvider>
             <Router>
                 <Navigation/>

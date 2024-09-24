@@ -3,6 +3,7 @@ import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { Box, FormControl, FormLabel, Input, Button, Text } from '@chakra-ui/react';
 
 export const Register = () => {
     const [username, setUsername] = useState('');
@@ -15,7 +16,8 @@ export const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/api/register', { username, email, password });
+            /* changed path from '/api/register', because useAxiosInterceptor sets /api as a base url*/
+            const response = await axios.post('/register', { username, email, password });
             localStorage.setItem('userInfo', JSON.stringify(response.data));
             setError(null);  // Clear any previous errors
             navigate('/profile');  // Redirect to profile page on success
@@ -25,39 +27,41 @@ export const Register = () => {
     };
 
     return (
-        <div>
-            <h2>Register</h2>
-            {error && <p>{error}</p>}
+        <Box maxW="sm" mx="auto" mt={8} p={4} borderWidth="1px" borderRadius="lg">
+            <Text fontSize="2xl" mb={4}>Register</Text>
+            {error && <Text color="red.500" mb={4}>{error}</Text>}
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Username</label>
-                    <input
+                <FormControl id="username" mb={4} isRequired>
+                    <FormLabel>Username</FormLabel>
+                    <Input
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        required
+                        placeholder="Enter your username"
                     />
-                </div>
-                <div>
-                    <label>Email</label>
-                    <input
+                </FormControl>
+                <FormControl id="email" mb={4} isRequired>
+                    <FormLabel>Email</FormLabel>
+                    <Input
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        required
+                        placeholder="Enter your email"
                     />
-                </div>
-                <div>
-                    <label>Password</label>
-                    <input
+                </FormControl>
+                <FormControl id="password" mb={4} isRequired>
+                    <FormLabel>Password</FormLabel>
+                    <Input
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        required
+                        placeholder="Enter your password"
                     />
-                </div>
-                <button type="submit">Register</button>
+                </FormControl>
+                <Button type="submit" colorScheme="teal" width="full" mt={4}>
+                    Register
+                </Button>
             </form>
-        </div>
+        </Box>
     );
 };

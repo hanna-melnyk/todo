@@ -9,17 +9,17 @@ export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    // Load token from localStorage when the component mounts
+    // Load token from localStorage when the component mounts (Page Reload)
     useEffect(() => {
         const userInfo = JSON.parse(localStorage.getItem('userInfo'));
         if (userInfo && userInfo.token) {
             setToken(userInfo.token); // Set the token in the state if it exists in localStorage
-            setIsLoggedIn(true);  // Set the logged in status to true
+            setIsLoggedIn(true);  // Set the logged-in status to true
         }
     }, []);
 
 
-    // Function to log out and clear the token
+    // Function to log out and clear the token from both state and localStorage
     const logout = () => {
         localStorage.removeItem('userInfo');
         setToken(null);
