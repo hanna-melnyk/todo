@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {useAxiosInterceptor} from "../api/axiosTokenInterceptor.js";
 import { AuthContext } from '../context/AuthContext';
-import { Box, Button, Input, List, ListItem, Text } from '@chakra-ui/react';
+import {Box, Button, Input, List, ListItem, Text, Checkbox } from '@chakra-ui/react';
 
 export const TodoList = () => {
     const { isLoggedIn } = useContext(AuthContext); // Check if the user is logged in
@@ -63,6 +63,18 @@ export const TodoList = () => {
         }
     };
 
+    // Toggle todo completion status
+    const toggleTodo = async (todo) => {
+        try {
+            const updatedTodo = { ...todo, completed: !todo.completed }; // Toggle completion status
+            await authApi.put(`/todos/${todo._id}`, updatedTodo); // Update on the server
+            setTodos(todos.map(t => (t._id === todo._id ? updatedTodo : t))); // Update local state
+        } catch (error) {
+            console.error('Error toggling todo:', error);
+            setError('Error updating todo');
+        }
+    };
+
     // Delete a todo
     const deleteTodo = async (id) => {
         try {
@@ -97,8 +109,15 @@ export const TodoList = () => {
             <List>
                 {todos.length > 0 ? (
                     todos.map(todo => (
-                        <ListItem key={todo._id} mb={2} display="flex" justifyContent="space-between">
-                            {todo.text}
+                        <ListItem key={todo._id} mb={2} display="flex" justifyContent="space-between" alignItems="center">
+                            <Checkbox
+                                isChecked={todo.completed}
+                                onChange={() => toggleTodo(todo)}
+                                colorScheme="teal"
+                                mr={4}
+                            >
+                                {todo.text}
+                            </Checkbox>
                             <Button colorScheme="red" onClick={() => deleteTodo(todo._id)}>Delete</Button>
                         </ListItem>
                     ))

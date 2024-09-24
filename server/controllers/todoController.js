@@ -1,44 +1,53 @@
 // server/controllers/todoController.js
-import { Todo } from '../models/todoModel.js';
+import { Todo } from '../models/TodoModel.js';
 
-
+// Get all todos
 export const getAllTodos = async (req, res) => {
     try {
-        const todos = await Todo.find(); // Fetch todos from MongoDB
-        res.json(todos); // Send todos as JSON response
+        const todos = await Todo.find({ user: req.user._id }); // Find todos for the logged-in user
+        res.json(todos);
     } catch (error) {
-        console.error('Error fetching todos:', error);
-        res.status(500).json({ message: 'Error fetching todos', error }); // Handle any errors
+        res.status(500).json({ message: 'Error fetching todos', error });
     }
 };
 
-
+// Add a new todo
 export const addTodo = async (req, res) => {
     const { text } = req.body;
-    if (!text) {
-        return res.status(400).json({ message: 'Todo text is required' }); // Return a 400 if no text
-    }
-
     try {
         const newTodo = new Todo({
-            text: text,
-            user: req.user._id,  // Use the user's ID from the token (req.user is available from auth middleware)
+            text,
+            user: req.user._id,
+            completed: false  // Default to not completed
         });
-        await newTodo.save(); // Save the new todo to the database
-        res.json(newTodo); // Return the newly created todo
+        const savedTodo = await newTodo.save();
+        res.json(savedTodo);
     } catch (error) {
-        console.error('Error adding todo:', error);
-        res.status(500).json({ message: 'Error adding todo', error }); // Handle any errors
+        res.status(500).json({ message: 'Error adding todo', error });
     }
 };
 
-// @desc    Delete a todo by ID
+// Update a todo (including completion status)
+export const updateTodo = async (req, res) => {
+    const { text, completed } = req.body;
+    try {
+        const updatedTodo = await Todo.findByIdAndUpdate(
+            req.params.id,
+            { text, completed },
+            { new: true }
+        );
+        res.json(updatedTodo);
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating todo', error });
+    }
+};
+
+// Delete a todo
 export const deleteTodo = async (req, res) => {
     try {
-        await Todo.findByIdAndDelete(req.params.id); // Delete todo by ID
-        res.sendStatus(204); // Send no content status
+        await Todo.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Todo deleted' });
     } catch (error) {
-        console.error('Error deleting todo:', error);
-        res.status(500).json({ message: 'Error deleting todo', error }); // Handle any errors
+        res.status(500).json({ message: 'Error deleting todo', error });
     }
 };
