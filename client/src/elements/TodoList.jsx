@@ -119,7 +119,7 @@ export const TodoList = () => {
                 placeholder="Add a new todo"
                 mb={4}
             />
-            <Button onClick={addTodo} colorScheme="teal" width="full" mb={4}>Add Todo</Button>
+            <Button onClick={addTodo} colorScheme="purple" width="full" mb={4}>Add Todo</Button>
             <List>
                 {todos.length > 0 ? (
                     todos.map(todo => (
@@ -127,7 +127,7 @@ export const TodoList = () => {
                             <HStack flex="1" spacing={5} onClick={() => toggleTodo(todo)} cursor="pointer">
                                 <Checkbox
                                     isChecked={todo.completed}
-                                    colorScheme="teal"
+                                    colorScheme="purple"
                                     pointerEvents="none"
                                     size="lg"
                                 />

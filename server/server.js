@@ -17,7 +17,6 @@ app.get('/', (req, res) => {
     res.send('Hello from the server!');
 });
 
-// You can add your MongoDB connection here
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('MongoDB connection error:', err));

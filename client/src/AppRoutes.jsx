@@ -10,9 +10,9 @@ const AppRoutes = () => {
     return (
         <Routes>
             <Route path="/" element={<TodoList />} />      {/* Home route displaying Todo List */}
-            <Route path="/login" element={<Login />} />    {/* Login route */}
-            <Route path="/register" element={<Register />} /> {/* Register route */}
-            <Route path="/profile" element={<Profile />} /> {/* Profile route */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/profile" element={<Profile />} />
         </Routes>
     );
 };

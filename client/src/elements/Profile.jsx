@@ -1,7 +1,9 @@
 // client/src/elements/Profile.jsx
+// client/src/elements/Profile.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import authApi from '../api/axiosTokenInterceptor';
+import { Box, Text, Spinner, Heading, Stack, Alert, AlertIcon } from '@chakra-ui/react';
 
 export const Profile = () => {
     const [user, setUser] = useState(null); // State to hold user data
@@ -11,35 +13,41 @@ export const Profile = () => {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                // Fetch the profile using the authApi (Axios instance with token automatically attached)
-                /* changed path from '/api/profile', because useAxiosInterceptor sets /api as a base url*/
                 const { data } = await authApi.get('/profile');
                 setUser(data); // Set the user data in state
             } catch (error) {
-                // Handle any error (e.g., invalid token or network issues)
                 if (error.response && error.response.status === 401) {
-                    navigate('/login'); // Redirect to login if not authorized (e.g., invalid or missing token)
+                    navigate('/login'); // Redirect to login if not authorized
                 } else {
-                    setError('Error fetching profile'); // Set a more general error message
+                    setError('Error fetching profile');
                 }
             }
         };
 
-        fetchProfile(); // Call the fetchProfile function
-    }, [authApi, navigate]); // Include authApi and navigate as dependencies
+        fetchProfile(); // Fetch user profile data on component mount
+    }, [authApi, navigate]);
 
     return (
-        <div>
-            <h2>Profile</h2>
-            {error && <p>{error}</p>} {/* Display error message if there's an error */}
-            {user ? (
-                <div>
-                    <p><strong>Username:</strong> {user.username}</p>
-                    <p><strong>Email:</strong> {user.email}</p>
-                </div>
-            ) : (
-                <p>Loading...</p> // Display loading message while fetching profile data
+        <Box maxW="sm" mx="auto" mt={8} p={4} borderWidth="1px" borderRadius="lg" bg="gray.500" color="gray.100">
+            <Heading size="lg" mb={6} color="purple.300">Profile</Heading>
+            {error && (
+                <Alert status="error" mb={4}>
+                    <AlertIcon />
+                    {error}
+                </Alert>
             )}
-        </div>
+            {user ? (
+                <Stack spacing={3}>
+                    <Text fontSize="lg">
+                        <strong>Username:</strong> {user.username}
+                    </Text>
+                    <Text fontSize="lg">
+                        <strong>Email:</strong> {user.email}
+                    </Text>
+                </Stack>
+            ) : (
+                <Spinner size="lg" color="purple.300" />
+            )}
+        </Box>
     );
 };

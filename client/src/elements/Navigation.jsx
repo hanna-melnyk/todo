@@ -1,8 +1,9 @@
 // client/src/components/Navigation.jsx
 import React, {useContext} from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import {Box, Button, HStack, Link, useColorMode, useColorModeValue, IconButton} from '@chakra-ui/react';
+import {Box, Button, HStack, Link, useColorMode, useColorModeValue, IconButton, Text} from '@chakra-ui/react';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
+import { LuSparkles } from "react-icons/lu";
 
 // Links for authorized users
 /* Use logout function from context */
@@ -11,7 +12,7 @@ const AuthLinks = ({ handleLogout }) => (
         <Link as={RouterLink} to="/profile">
             Profile
         </Link>
-        <Button colorScheme="teal" variant="outline" onClick={handleLogout}>
+        <Button colorScheme="purple" variant="outline" onClick={handleLogout}>
             Logout
         </Button>
     </HStack>
@@ -47,7 +48,10 @@ export const Navigation = () => {
             <HStack spacing={6} justifyContent="space-between">
                 <HStack spacing={6}>
                     <Link as={RouterLink} to="/">
-                        Home
+                        <HStack spacing={2}>
+                            <LuSparkles />
+                            <Text>Home</Text>
+                        </HStack>
                     </Link>
                     {isLoggedIn ? <AuthLinks handleLogout={handleLogout} /> : <GuestLinks />}
                 </HStack>
@@ -55,7 +59,6 @@ export const Navigation = () => {
                     aria-label={`Toggle ${colorMode === 'light' ? 'Dark' : 'Light'} Mode`}
                     icon={icon}
                     onClick={toggleColorMode}
-                    colorScheme="teal"
                 />
             </HStack>
         </Box>

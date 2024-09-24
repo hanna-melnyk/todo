@@ -52,7 +52,7 @@ export const Login = () => {
                         placeholder="Enter your password"
                     />
                 </FormControl>
-                <Button type="submit" colorScheme="teal" width="full" mt={4}>
+                <Button colorScheme="purple" type="submit" width="full" mt={4}>
                     Login
                 </Button>
             </form>
