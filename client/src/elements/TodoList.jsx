@@ -3,7 +3,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {useAxiosInterceptor} from "../api/axiosTokenInterceptor.js";
 import { AuthContext } from '../context/AuthContext';
-import {Box, Button, Input, List, ListItem, Text, Checkbox } from '@chakra-ui/react';
+import { Box, Button, Input, List, ListItem, Text, Checkbox, IconButton, useDisclosure } from '@chakra-ui/react';
+import { EditIcon, DeleteIcon } from '@chakra-ui/icons';
 
 export const TodoList = () => {
     const { isLoggedIn } = useContext(AuthContext); // Check if the user is logged in
@@ -14,7 +15,8 @@ export const TodoList = () => {
     const [loading, setLoading] = useState(true); // Add loading state
     const [isSelected, setIsSelected] = React.useState(false);
     const navigate = useNavigate();
-
+    // useDisclosure hook manages the open/close state of components, typically used for modal, drawer, etc.
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     // If the user is not logged in, redirect to the login page
     useEffect(() => {
@@ -86,6 +88,31 @@ export const TodoList = () => {
         }
     };
 
+    // Edit a todo
+    const handleEdit = (todo) => {
+        setEditTodo(todo);  // Set the todo to be edited
+        setNewTodo(todo.text);  // Set the input to the todo text
+        onOpen();  // Open the edit modal/input field (sets isOpen to true)
+    };
+
+    // Save the edited todo
+    const saveTodo = async () => {
+        if (editTodo) {
+            try {
+                const updatedTodo = { ...editTodo, text: newTodo };  // Update the text of the todo
+                await authApi.put(`/todos/${editTodo._id}`, updatedTodo);  // Save the updated todo on the server
+                setTodos(todos.map(t => (t._id === editTodo._id ? updatedTodo : t)));  // Update the local state
+                setEditTodo(null);  // Clear the edit state
+                setNewTodo('');  // Clear the input field
+                onClose();  // Close the modal/input field (sets isOpen to false)
+            } catch (error) {
+                console.error('Error saving todo:', error);
+                setError('Error saving todo');
+            }
+        }
+    };
+
+
     // Conditional rendering based on error, loading, and todos length
     if (loading) {
         return <p>Loading todos...</p>; // Display loading state
@@ -105,7 +132,9 @@ export const TodoList = () => {
                 placeholder="Add a new todo"
                 mb={4}
             />
-            <Button onClick={addTodo} colorScheme="teal" width="full" mb={4}>Add Todo</Button>
+            <Button onClick={editTodo ? saveTodo : addTodo} colorScheme="teal" width="full" mb={4}>
+                {editTodo ? 'Save Todo' : 'Add Todo'}
+            </Button>
             <List>
                 {todos.length > 0 ? (
                     todos.map(todo => (
@@ -118,7 +147,19 @@ export const TodoList = () => {
                             >
                                 {todo.text}
                             </Checkbox>
-                            <Button colorScheme="red" onClick={() => deleteTodo(todo._id)}>Delete</Button>
+                            <IconButton
+                                aria-label="Edit Todo"
+                                icon={<EditIcon />}
+                                colorScheme="yellow"
+                                onClick={() => handleEdit(todo)}
+                                mr={2}
+                            />
+                            <IconButton
+                                aria-label="Delete Todo"
+                                icon={<DeleteIcon />}
+                                colorScheme="red"
+                                onClick={() => deleteTodo(todo._id)}
+                            />
                         </ListItem>
                     ))
                 ) : (
