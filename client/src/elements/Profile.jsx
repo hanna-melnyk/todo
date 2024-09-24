@@ -1,5 +1,4 @@
 // client/src/elements/Profile.jsx
-// client/src/elements/Profile.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import authApi from '../api/axiosTokenInterceptor';

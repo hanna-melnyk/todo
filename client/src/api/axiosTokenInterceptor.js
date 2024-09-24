@@ -16,7 +16,6 @@ authApi.interceptors.request.use(
 
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`; // Attach token if it exists
-            console.log(`Token used in request: ${token}`);
         } else {
             console.warn('No valid token found for request');
         }

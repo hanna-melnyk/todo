@@ -4,7 +4,7 @@ import { extendTheme } from '@chakra-ui/react';
 
 // 2. Add color mode configuration
 const config = {
-    initialColorMode: 'dark', // Can be 'light', 'dark', or 'system'
+    initialColorMode: 'light', // Can be 'light', 'dark', or 'system'
     useSystemColorMode: false, // Set to true if you want to follow system preference
 };
 

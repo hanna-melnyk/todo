@@ -17,7 +17,6 @@ export const Login = () => {
             localStorage.removeItem('userInfo'); // Clear old token if any
 
             const response = await authApi.post('/login', { email, password });
-            console.log(`Token received from server: ${response.data.token}`);
 
             // Store the new token and user info in localStorage
             localStorage.setItem('userInfo', JSON.stringify(response.data));
