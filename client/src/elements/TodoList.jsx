@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import authApi from '../api/axiosTokenInterceptor';
 import { Box, Button, Input, List, ListItem, Text, Checkbox, IconButton, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, HStack  } from '@chakra-ui/react';
 import { EditIcon, DeleteIcon } from '@chakra-ui/icons';
+import { useLogin } from '../contexts/LoginContext';
 
 export const TodoList = () => {
     const [todos, setTodos] = useState([]);
@@ -14,8 +15,10 @@ export const TodoList = () => {
     const navigate = useNavigate();
     const { isOpen, onOpen, onClose } = useDisclosure();  // useDisclosure for modal control
 
-    const storedUserInfo = JSON.parse(localStorage.getItem('userInfo'));
-    const isLoggedIn = !!storedUserInfo && !!storedUserInfo.token; // Check if logged in
+    const { isLoggedIn } = useLogin(); // Use isLoggedIn from context
+
+    // const storedUserInfo = JSON.parse(localStorage.getItem('userInfo'));
+    // const isLoggedIn = !!storedUserInfo && !!storedUserInfo.token; // Check if logged in
 
     // If the user is not logged in, redirect to the login page
     useEffect(() => {

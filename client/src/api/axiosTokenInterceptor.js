@@ -1,12 +1,10 @@
 // client/src/api/axiosTokenInterceptor.js
 import axios from 'axios';
-import React, { useContext } from 'react';
 
 // Create an Axios instance
-const authApi  = axios.create({
+const authApi = axios.create({
     baseURL: '/api', // Set the base URL for your API
 });
-
 
 // Attach the interceptor that appends the token to all requests
 authApi.interceptors.request.use(
@@ -16,12 +14,14 @@ authApi.interceptors.request.use(
 
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`; // Attach token if it exists
+            console.log(`[TokenInterceptor] - Token attached to request: '${token}' in component: 'Axios Instance', function: 'authApi.interceptors.request.use'`);
         } else {
-            console.warn('No valid token found for request');
+            console.warn(`[TokenInterceptor] - No valid token found for request in component: 'Axios Instance', function: 'authApi.interceptors.request.use'`);
         }
         return config;
     },
     (error) => {
+        console.error(`[TokenInterceptor] - Error in request interceptor in component: 'Axios Instance', function: 'authApi.interceptors.request.use'`, error);
         return Promise.reject(error);
     }
 );

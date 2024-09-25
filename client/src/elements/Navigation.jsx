@@ -4,6 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import {Box, Button, HStack, Link, useColorMode, useColorModeValue, IconButton, Text} from '@chakra-ui/react';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import { LuSparkles } from "react-icons/lu";
+import { useLogin } from '../contexts/LoginContext';
 
 // Links for authorized users
 /* Use logout function from context */
@@ -35,13 +36,17 @@ const GuestLinks = () => (
 export const Navigation = () => {
     const { colorMode, toggleColorMode } = useColorMode(); // Get color mode and toggle function
     const icon = colorMode === 'light' ? <MoonIcon /> : <SunIcon />;
-    const storedUserInfo = JSON.parse(localStorage.getItem('userInfo'));
-    const isLoggedIn = !!storedUserInfo && !!storedUserInfo.token; // Determine if logged in based on localStorage
+    // const storedUserInfo = JSON.parse(localStorage.getItem('userInfo'));
+    // const isLoggedIn = !!storedUserInfo && !!storedUserInfo.token; // Determine if logged in based on localStorage
 
-    const handleLogout = () => {
-        localStorage.removeItem('userInfo');
-        window.location.reload();
-    };
+    const { isLoggedIn, logout } = useLogin(); // Get isLoggedIn state and logout function from LoginContext
+
+    console.log('Is Logged In:', isLoggedIn);
+
+    // const handleLogout = () => {
+    //     localStorage.removeItem('userInfo');
+    //     window.location.reload();
+    // };
 
     return (
         <Box as="nav" bg={useColorModeValue('gray.100', 'gray.900')} p={4}>
@@ -53,7 +58,7 @@ export const Navigation = () => {
                             <Text>Home</Text>
                         </HStack>
                     </Link>
-                    {isLoggedIn ? <AuthLinks handleLogout={handleLogout} /> : <GuestLinks />}
+                    {isLoggedIn ? <AuthLinks handleLogout={logout} /> : <GuestLinks />}
                 </HStack>
                 <IconButton
                     aria-label={`Toggle ${colorMode === 'light' ? 'Dark' : 'Light'} Mode`}
