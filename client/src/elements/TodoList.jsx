@@ -10,6 +10,7 @@ import {SearchBar} from "./SearchBar.jsx";
 export const TodoList = () => {
     const [todos, setTodos] = useState([]);
     const [newTodo, setNewTodo] = useState('');
+    const [newTags, setNewTags] = useState('');
     const [editTodo, setEditTodo] = useState(null);
     const [error, setError] = useState(null);
     const [loadingTodos, setLoadingTodos] = useState(true);
@@ -59,9 +60,12 @@ export const TodoList = () => {
     // Add a new todo
     const addTodo = async () => {
         try {
-            const response = await authApi.post('/todos', { text: newTodo, tags: [] });
+            // Convert the comma-separated tags string into an array
+            const tagsArray = newTags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+            const response = await authApi.post('/todos', { text: newTodo, tags: tagsArray });
             setTodos([...todos, response.data]);
             setNewTodo('');
+            setNewTags('');  // Clear the tags input after adding a todo
         } catch (error) {
             console.error('Error adding todo:', error);
             setError('Error adding todo');
@@ -127,11 +131,21 @@ export const TodoList = () => {
     return (
         <Box maxW="sm" mx="auto" mt={8} p={4} borderWidth="1px" borderRadius="lg">
             <Text fontSize="2xl" mb={4}>Todo List</Text>
+            {/* Input for adding new todo text */}
             <Input
                 type="text"
                 value={newTodo}
                 onChange={(e) => setNewTodo(e.target.value)}
                 placeholder="Add a new todo"
+                mb={2}
+            />
+
+            {/* Input for adding tags */}
+            <Input
+                type="text"
+                value={newTags}
+                onChange={(e) => setNewTags(e.target.value)}
+                placeholder="Add tags (comma separated)"
                 mb={4}
             />
             <Button onClick={addTodo} colorScheme="purple" width="full" mb={4}>Add Todo</Button>
@@ -154,6 +168,10 @@ export const TodoList = () => {
                                     color={todo.completed ? "gray.500" : "black"}
                                     fontSize="lg"
                                 >{todo.text}</Text>
+                                {/* Display tags */}
+                                {todo.tags && todo.tags.length > 0 && (
+                                    <Text fontSize="sm" color="gray.600">Tags: {todo.tags.join(', ')}</Text>
+                                )}
                             </HStack>
                             <HStack spacing={2}>
                                 <IconButton
