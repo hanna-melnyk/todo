@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import authApi from '../api/axiosTokenInterceptor';
-import { Box, Button, Input, List, ListItem, Text, Checkbox, IconButton, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, HStack  } from '@chakra-ui/react';
+import { Box, Button, Input, List, ListItem, Text, Checkbox, IconButton, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, HStack, Tag, TagLabel } from '@chakra-ui/react';
 import { EditIcon, DeleteIcon } from '@chakra-ui/icons';
 import { useLogin } from '../contexts/LoginContext';
 import {SearchBar} from "./SearchBar.jsx";
@@ -129,8 +129,18 @@ export const TodoList = () => {
     if (error) return <p>{error}</p>;
 
     return (
-        <Box maxW="sm" mx="auto" mt={8} p={4} borderWidth="1px" borderRadius="lg">
+        <Box
+            maxW="95%"
+            mx="auto"
+            mt={8}
+            p={6}
+            borderWidth="1px"
+            borderRadius="lg"
+            bg="white"
+            boxShadow="sm"
+        >
             <Text fontSize="2xl" mb={4}>Todo List</Text>
+
             {/* Input for adding new todo text */}
             <Input
                 type="text"
@@ -148,6 +158,7 @@ export const TodoList = () => {
                 placeholder="Add tags (comma separated)"
                 mb={4}
             />
+
             <Button onClick={addTodo} colorScheme="purple" width="full" mb={4}>Add Todo</Button>
 
             <SearchBar onSearch={handleSearch} />
@@ -167,12 +178,29 @@ export const TodoList = () => {
                                     textDecoration={todo.completed ? "line-through" : "none"}
                                     color={todo.completed ? "gray.500" : "black"}
                                     fontSize="lg"
-                                >{todo.text}</Text>
-                                {/* Display tags */}
-                                {todo.tags && todo.tags.length > 0 && (
-                                    <Text fontSize="sm" color="gray.600">Tags: {todo.tags.join(', ')}</Text>
-                                )}
+                                >
+                                    {todo.text}
+                                </Text>
                             </HStack>
+
+                            {/* Display tags as styled rectangles */}
+                            <HStack spacing={2} align="center">
+                                {todo.tags && todo.tags.length > 0 && todo.tags.map((tag, index) => (
+                                    <Tag
+                                        key={index}
+                                        size="lg"                       // Optional: Choose between 'sm', 'md', or 'lg' for tag size
+                                        variant="subtle"                 // Subtle variant for a less prominent background
+                                        colorScheme="purple"               // Customize the color scheme as needed
+                                        borderRadius="md"                // Adjust the border radius for a rectangular look
+                                        px={4}                           // Adjust padding on the X-axis to make it wider
+                                        py={1.5}                         // Adjust padding on the Y-axis to reduce height
+                                        height="32px"                    // Set a fixed height for consistency
+                                    >
+                                        <TagLabel fontSize="sm" fontWeight="medium">{tag}</TagLabel>
+                                    </Tag>
+                                ))}
+                            </HStack>
+
                             <HStack spacing={2}>
                                 <IconButton
                                     aria-label="Edit Todo"
