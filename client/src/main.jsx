@@ -4,13 +4,16 @@ import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
 import App from './App.jsx';
 import './index.css';
 import theme from './theme'; // for custom theme in chakraui
+import { LoginProvider } from './contexts/LoginContext';
 
 createRoot(document.getElementById('root')).render(
     <>
     {/* <StrictMode> */}
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
         <ChakraProvider theme={theme}>
-            <App />
+            <LoginProvider>
+                <App />
+            </LoginProvider>
         </ChakraProvider>
     {/* </StrictMode> */}
     </>

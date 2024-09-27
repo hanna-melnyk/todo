@@ -1,29 +1,35 @@
 // client/src/elements/Login.jsx
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import authApi from '../api/axiosTokenInterceptor';
+import axios from 'axios';
 import { Box, FormControl, FormLabel, Input, Button, Text } from '@chakra-ui/react';
+import { useLogin } from '../contexts/LoginContext';
 
 export const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const navigate = useNavigate();
-
+    const { login } = useLogin(); // Use the login function from the context
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            localStorage.removeItem('userInfo'); // Clear old token if any
+        console.log(`[LoginComponent] - Login form submitted with email: ${email} in component: 'Login', function: 'handleSubmit'`);
 
-            const response = await authApi.post('/login', { email, password });
+        try {
+            const response = await axios.post('/api/login', { email, password });
 
             // Store the new token and user info in localStorage
             localStorage.setItem('userInfo', JSON.stringify(response.data));
+            console.log(`[LoginComponent] - Token received and stored: '${response.data.token}' for user: ${email} in component: 'Login', function: 'handleSubmit'`);
+
+            // Call the login function from the context to set isLoggedIn to true
+            login();
 
             setError(null);  // Clear any previous errors
             navigate('/');  // Redirect to home page on success
         } catch (error) {
+            console.error(`[LoginComponent] - Login error in component: 'Login', function: 'handleSubmit'`, error);
             setError('Invalid email or password');
         }
     };
