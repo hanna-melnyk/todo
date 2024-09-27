@@ -6,7 +6,8 @@ export const LoginContext = createContext();
 
 // LoginProvider that wraps the app and provides the login status
 export const LoginProvider = ({ children }) => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(null); // Initially null to indicate unknown state
+    const [loading, setLoading] = useState(true); // New loading state
 
 
     // Check localStorage for user info or token when the app loads
@@ -14,7 +15,10 @@ export const LoginProvider = ({ children }) => {
         const storedUserInfo = JSON.parse(localStorage.getItem('userInfo'));
         if (storedUserInfo && storedUserInfo.token) {
             setIsLoggedIn(true); // Set as logged in if token is found
+        } else {
+            setIsLoggedIn(false); // Set as not logged in if no token is found
         }
+        setLoading(false); // Loading is done
     }, []);
 
     const login = () => setIsLoggedIn(true);
