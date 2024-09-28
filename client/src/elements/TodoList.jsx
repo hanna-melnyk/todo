@@ -5,7 +5,7 @@ import authApi from '../api/axiosTokenInterceptor';
 import {
     Box, Button, Input, List, ListItem, Text, Checkbox, IconButton, useDisclosure, Modal,
     ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, HStack, Tag, TagLabel,
-    Menu, MenuButton, MenuList, MenuItem, useOutsideClick
+    Alert, AlertIcon, AlertTitle, AlertDescription, useOutsideClick
 } from '@chakra-ui/react';
 import { EditIcon, DeleteIcon } from '@chakra-ui/icons';
 import { useLogin } from '../contexts/LoginContext';
@@ -69,6 +69,11 @@ export const TodoList = ({searchParams}) => {
 
     // Add a new todo
     const addTodo = async () => {
+        if (!newTodo.trim()) {
+            setError('Todo text cannot be empty.'); // Set error if input is empty
+            return;
+        }
+
         try {
             // Convert the comma-separated tags string into an array
             const tagsArray = newTags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
@@ -76,6 +81,7 @@ export const TodoList = ({searchParams}) => {
             setTodos([...todos, response.data]);
             setNewTodo('');
             setNewTags('');  // Clear the tags input after adding a todo
+            setError(''); // Clear error after successful addition
         } catch (error) {
             console.error('Error adding todo:', error);
             setError('Error adding todo');
@@ -129,11 +135,16 @@ export const TodoList = ({searchParams}) => {
         }
     };
 
-    // Filter tags based on input
+    // Filter tags based on input and exclude already selected tags
     useEffect(() => {
         if (newTags) {
-            const searchValue = newTags.split(',').pop().trim(); // Get the last input tag fragment
-            setFilteredTags(allTags.filter(tag => tag.toLowerCase().includes(searchValue.toLowerCase())));
+            const searchValue = newTags.split(',').pop().trim();
+            const selectedTags = newTags.split(',').map(tag => tag.trim()).filter(tag => tag !== ''); // Get existing tags
+            setFilteredTags(
+                allTags
+                    .filter(tag => tag.toLowerCase().includes(searchValue.toLowerCase())) // Match with input
+                    .filter(tag => !selectedTags.includes(tag)) // Exclude selected tags
+            );
         } else {
             setFilteredTags([]);
         }
@@ -168,7 +179,7 @@ export const TodoList = ({searchParams}) => {
 
     // Conditional rendering based on error, loading, and todos length
     if (loading || loadingTodos) return <p>Loading...</p>; // Show loading state
-    if (error) return <p>{error}</p>;
+    // if (error) return <p>{error}</p>;
 
     return (
         <Box
@@ -182,6 +193,14 @@ export const TodoList = ({searchParams}) => {
             boxShadow="sm"
         >
             <Text fontSize="2xl" pb={4}>Todo List</Text>
+
+            {error === 'Todo text cannot be empty.' && (
+                <Alert status="error" mb={4}>
+                    <AlertIcon />
+                    <AlertTitle>Error:</AlertTitle>
+                    <AlertDescription>{error}</AlertDescription>
+                </Alert>
+            )}
 
             <Input
                 type="text"
