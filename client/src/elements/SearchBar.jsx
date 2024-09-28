@@ -17,9 +17,9 @@ export const SearchBar = ({ onSearch }) => {
     };
 
     return (
-        <Box w="100%">
+        <Box w="100%" p={2}>
             {/* Main Search Input with Search Button Inside */}
-            <HStack>
+            <HStack p={2}>
                 <InputGroup maxW="container.md">
                     <Input
                         placeholder="Search by text..."
@@ -35,23 +35,23 @@ export const SearchBar = ({ onSearch }) => {
                 </InputGroup>
             </HStack>
 
-            {/* Refine Search Toggle */}
-            <HStack justifyContent="center" cursor="pointer" onClick={() => setShowAdvancedSearch(!showAdvancedSearch)}> {/* Replace margin with padding */}
-                <Text fontWeight="medium">Refine your search</Text>
-                <Icon as={ChevronDownIcon} boxSize={5} transform={showAdvancedSearch ? 'rotate(180deg)' : 'rotate(0deg)'} transition="all 0.3s" />
+            {/* Refine Search Toggle Positioned to the Left and Styled Lighter */}
+            <HStack justifyContent="flex-start" cursor="pointer" onClick={() => setShowAdvancedSearch(!showAdvancedSearch)} p={2}>
+                <Text fontWeight="medium" color="gray.400">Refine your search</Text>
+                <Icon as={ChevronDownIcon} boxSize={5} color="gray.400" transform={showAdvancedSearch ? 'rotate(180deg)' : 'rotate(0deg)'} transition="all 0.3s" />
             </HStack>
 
             {/* Advanced Search Options */}
             <Collapse in={showAdvancedSearch} animateOpacity>
-                <Box maxW="container.md">
-                    <HStack>
+                <Box maxW="container.md" p={2}>
+                    <HStack p={2}>
                         <Input
                             placeholder="Search by tags (comma separated)..."
                             value={searchTags}
                             onChange={(e) => setSearchTags(e.target.value)}
                         />
                     </HStack>
-                    <HStack>
+                    <HStack p={2}>
                         <FormControl display="flex" alignItems="center">
                             <FormLabel htmlFor="strict-search" mb="0">
                                 Strict Search (AND)
