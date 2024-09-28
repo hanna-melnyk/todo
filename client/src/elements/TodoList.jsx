@@ -111,6 +111,16 @@ export const TodoList = ({searchParams}) => {
         onOpen();  // Open the modal for editing
     };
 
+    // Function to handle cancel button click in modal
+    const handleCancel = () => {
+        setEditTodo(null);  // Clear the edit state
+        setNewTodo('');  // Reset the text input field
+        setNewTags('');  // Reset the tags input field
+        onClose();  // Close the modal
+    };
+
+
+
     // Save the edited todo
     const saveTodo = async () => {
         if (editTodo) {
@@ -331,7 +341,7 @@ export const TodoList = ({searchParams}) => {
                         <Button colorScheme="blue" mr={3} onClick={saveTodo}>
                             Save
                         </Button>
-                        <Button onClick={onClose}>Cancel</Button>
+                        <Button onClick={handleCancel}>Cancel</Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>
