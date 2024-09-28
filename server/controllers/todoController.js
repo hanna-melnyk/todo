@@ -10,16 +10,18 @@ export const getAllTodos = async (req, res) => {
     const conditions = []; // Array to store individual conditions for the query
 
 
-    // Add text search condition if provided
-    if (text) {
-        conditions.push({ text: { $regex: text, $options: 'i' } });  // Case-insensitive regex search for text
-    }
+        // Add text search condition if provided
+        if (text) {
+            conditions.push({ text: { $regex: text, $options: 'i' } });  // Case-insensitive regex search for text
+        }
 
-    // Add tags search condition if provided
-    if (tags) {
-        const tagsArray = tags.split(',');  // Split tags by comma to handle multiple tags
-        conditions.push({ tags: { $in: tagsArray } });  // Match any of the provided tags
-    }
+        // Add tags search condition if provided
+        if (tags) {
+            const tagsArray = tags.split(',').map(tag => tag.trim());  // Split tags by comma to handle multiple tags
+            const tagConditions = tagsArray.map(tag => ({ tags: { $regex: new RegExp(tag, 'i') } })); // Create case-insensitive regex conditions for each tag
+            conditions.push({ $or: tagConditions });  // Match any of the provided tags (case-insensitive)
+        }
+
 
     // Apply the appropriate query condition based on the `strict` parameter
     if (conditions.length > 0) {
