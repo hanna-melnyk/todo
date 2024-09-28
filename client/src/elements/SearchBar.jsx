@@ -17,10 +17,10 @@ export const SearchBar = ({ onSearch }) => {
     };
 
     return (
-        <Box pb={4} w="100%">
+        <Box w="100%">
             {/* Main Search Input with Search Button Inside */}
-            <HStack spacing={2} pb={2}>
-                <InputGroup maxW="container.md" px="auto">
+            <HStack>
+                <InputGroup maxW="container.md">
                     <Input
                         placeholder="Search by text..."
                         value={searchText}
@@ -28,7 +28,7 @@ export const SearchBar = ({ onSearch }) => {
                         pr="4.5rem"
                     />
                     <InputRightElement width="4.5rem">
-                        <Button h="1.75rem" size="sm" colorScheme="blue" onClick={handleSearch}>
+                        <Button h="1.75rem" size="sm" colorScheme="purple" onClick={handleSearch}>
                             Search
                         </Button>
                     </InputRightElement>
@@ -36,22 +36,22 @@ export const SearchBar = ({ onSearch }) => {
             </HStack>
 
             {/* Refine Search Toggle */}
-            <HStack spacing={2} pb={4} justifyContent="center" cursor="pointer" onClick={() => setShowAdvancedSearch(!showAdvancedSearch)}> {/* Replace margin with padding */}
+            <HStack justifyContent="center" cursor="pointer" onClick={() => setShowAdvancedSearch(!showAdvancedSearch)}> {/* Replace margin with padding */}
                 <Text fontWeight="medium">Refine your search</Text>
                 <Icon as={ChevronDownIcon} boxSize={5} transform={showAdvancedSearch ? 'rotate(180deg)' : 'rotate(0deg)'} transition="all 0.3s" />
             </HStack>
 
             {/* Advanced Search Options */}
             <Collapse in={showAdvancedSearch} animateOpacity>
-                <Box maxW="container.md" px="auto">
-                    <HStack spacing={2} pb={4}>
+                <Box maxW="container.md">
+                    <HStack>
                         <Input
                             placeholder="Search by tags (comma separated)..."
                             value={searchTags}
                             onChange={(e) => setSearchTags(e.target.value)}
                         />
                     </HStack>
-                    <HStack spacing={4} pb={4}> {/* Replace margin with padding */}
+                    <HStack>
                         <FormControl display="flex" alignItems="center">
                             <FormLabel htmlFor="strict-search" mb="0">
                                 Strict Search (AND)

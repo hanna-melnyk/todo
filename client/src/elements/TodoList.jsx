@@ -184,7 +184,7 @@ export const TodoList = ({searchParams}) => {
                                 </Text>
                             </HStack>
 
-                            <HStack spacing={2} align="center">
+                            <HStack spacing={2} px={2} align="center">
                                 {todo.tags && todo.tags.length > 0 && todo.tags.map((tag, index) => (
                                     <Tag
                                         key={index}
