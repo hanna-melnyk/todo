@@ -2,7 +2,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import authApi from '../api/axiosTokenInterceptor';
-import { Box, Button, Input, List, ListItem, Text, Checkbox, IconButton, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, HStack, Tag, TagLabel } from '@chakra-ui/react';
+import {
+    Box, Button, Input, List, ListItem, Text, Checkbox, IconButton, useDisclosure, Modal,
+    ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, HStack, Tag, TagLabel
+} from '@chakra-ui/react';
 import { EditIcon, DeleteIcon } from '@chakra-ui/icons';
 import { useLogin } from '../contexts/LoginContext';
 // import {SearchBar} from "./SearchBar.jsx";
@@ -132,43 +135,39 @@ export const TodoList = ({searchParams}) => {
 
     return (
         <Box
-            maxW="95%"
+            maxW="container.lg"
             mx="auto"
-            mt={8}
-            p={6}
+            pt={8}
+            px={6}
             borderWidth="1px"
             borderRadius="lg"
             bg="white"
             boxShadow="sm"
         >
-            <Text fontSize="2xl" mb={4}>Todo List</Text>
+            <Text fontSize="2xl" pb={4}>Todo List</Text>
 
-            {/* Input for adding new todo text */}
             <Input
                 type="text"
                 value={newTodo}
                 onChange={(e) => setNewTodo(e.target.value)}
                 placeholder="Add a new todo"
-                mb={2}
+                pb={2}
             />
 
-            {/* Input for adding tags */}
             <Input
                 type="text"
                 value={newTags}
                 onChange={(e) => setNewTags(e.target.value)}
                 placeholder="Add tags (comma separated)"
-                mb={4}
+                pb={4}
             />
 
-            <Button onClick={addTodo} colorScheme="purple" width="full" mb={4}>Add Todo</Button>
-
-            {/*<SearchBar onSearch={handleSearch} />*/}
+            <Button onClick={addTodo} colorScheme="purple" width="full" pb={4}>Add Todo</Button>
 
             <List>
                 {todos.length > 0 ? (
                     todos.map(todo => (
-                        <ListItem key={todo._id} mb={2} display="flex" justifyContent="space-between" alignItems="center">
+                        <ListItem key={todo._id} pb={2} display="flex" justifyContent="space-between" alignItems="center">
                             <HStack flex="1" spacing={5} onClick={() => toggleTodo(todo)} cursor="pointer">
                                 <Checkbox
                                     isChecked={todo.completed}
@@ -185,18 +184,17 @@ export const TodoList = ({searchParams}) => {
                                 </Text>
                             </HStack>
 
-                            {/* Display tags as styled rectangles */}
                             <HStack spacing={2} align="center">
                                 {todo.tags && todo.tags.length > 0 && todo.tags.map((tag, index) => (
                                     <Tag
                                         key={index}
-                                        size="lg"                       // Optional: Choose between 'sm', 'md', or 'lg' for tag size
-                                        variant="subtle"                 // Subtle variant for a less prominent background
-                                        colorScheme="purple"               // Customize the color scheme as needed
-                                        borderRadius="md"                // Adjust the border radius for a rectangular look
-                                        px={4}                           // Adjust padding on the X-axis to make it wider
-                                        py={1.5}                         // Adjust padding on the Y-axis to reduce height
-                                        height="32px"                    // Set a fixed height for consistency
+                                        size="lg"
+                                        variant="subtle"
+                                        colorScheme="purple"
+                                        borderRadius="md"
+                                        px={4}
+                                        py={1.5}
+                                        height="32px"
                                     >
                                         <TagLabel fontSize="sm" fontWeight="medium">{tag}</TagLabel>
                                     </Tag>
@@ -224,7 +222,6 @@ export const TodoList = ({searchParams}) => {
                 )}
             </List>
 
-            {/* Edit Todo Modal */}
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>

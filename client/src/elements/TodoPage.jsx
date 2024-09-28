@@ -17,12 +17,12 @@ export const TodoPage = () => {
     };
 
     return (
-        <Box>
+        <Box w="100vw" overflowX="hidden">
             {/* Search Bar Container with Full Viewport Width */}
             <Box w="100vw" bg="gray.50" py={4} boxShadow="sm">
                 {/* Centered SearchBar inside the Container */}
                 <Center>
-                    <Container maxW="container.lg" p={4} bg="white" boxShadow="md" borderRadius="md">
+                    <Container maxW="container.lg" w="100vw" p={4} bg="white" boxShadow="md" borderRadius="md">
                         {/* Pass handleSearch to the SearchBar */}
                         <SearchBar onSearch={handleSearch} />
                     </Container>
@@ -30,7 +30,15 @@ export const TodoPage = () => {
             </Box>
 
             {/* TodoList Section */}
-            <Container maxW="container.lg" my={4} p={4} bg="white" boxShadow="md" borderRadius="md">
+            <Container
+                maxW="container.lg"
+                w="100vw"
+                my={4}
+                p={4}
+                bg="white"
+                boxShadow="md"
+                borderRadius="md"
+            >
                 {/* Pass search parameters to TodoList */}
                 <TodoList searchParams={searchParams} />
             </Container>
