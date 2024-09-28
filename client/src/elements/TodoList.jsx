@@ -22,6 +22,7 @@ export const TodoList = ({searchParams}) => {
     const [allTags, setAllTags] = useState([]); // State to hold all existing tags
     const [filteredTags, setFilteredTags] = useState([]); // Filtered tag suggestions
     const menuRef = useRef(); // Ref to handle outside click for tag suggestions
+    const inputRef = useRef(); // New input ref for the tag input
     const navigate = useNavigate();
     const { isOpen, onOpen, onClose } = useDisclosure();  // useDisclosure for modal control
 
@@ -50,12 +51,6 @@ export const TodoList = ({searchParams}) => {
             setLoadingTodos(false); // Stop loading todos
         }
     };
-
-    // Detect clicks outside the menuRef element and close the menu
-    useOutsideClick({
-        ref: menuRef,
-        handler: () => setFilteredTags([]), // Clear the filtered tags when clicking outside
-    });
 
 
     // Wait until loading is done and isLoggedIn is not null
@@ -144,6 +139,28 @@ export const TodoList = ({searchParams}) => {
         }
     }, [newTags, allTags]);
 
+    // Update the input field when a tag is clicked
+    const handleTagClick = (tag, event) => {
+        event.stopPropagation(); // Prevent click event from propagating
+        console.log("Tag Clicked:", tag); // Log the clicked tag
+        // Split the current input by commas to handle multiple tags
+        const tagsArray = newTags.split(',').map(tag => tag.trim());
+        console.log("Before Update:", tagsArray); // Log the state before updating
+        // Replace the last fragment with the selected tag
+        tagsArray[tagsArray.length - 1] = tag;
+        // Join the updated tags and add a comma
+        const updatedTags = tagsArray.filter(t => t !== '').join(', ') + ', ';
+        console.log("After Update:", updatedTags); // Log the updated tags string
+        setNewTags(updatedTags);
+        setFilteredTags([]);
+        inputRef.current.focus(); // Keep focus on the input field
+    };
+
+    useOutsideClick({
+        ref: menuRef,
+        handler: () => setFilteredTags([]),
+    });
+
     // // Handle search criteria update from SearchBar component
     // const handleSearch = (searchParams) => {
     //     fetchTodos(searchParams);  // Fetch todos based on new search parameters
@@ -175,15 +192,20 @@ export const TodoList = ({searchParams}) => {
             />
 
             <Input
+                ref={inputRef} // Attach ref to the input
                 type="text"
                 value={newTags}
-                onChange={(e) => setNewTags(e.target.value)}
+                onChange={(e) => {
+                    console.log("Current New Tags Input:", e.target.value); // Log the input value on change
+                    setNewTags(e.target.value);
+                }}
                 placeholder="Add tags (comma separated)"
                 pb={4}
             />
             <Box position="relative">
                 {filteredTags.length > 0 && (
                     <Box
+                        ref={menuRef} // Attach the ref to the dropdown menu container
                         maxH="200px"
                         overflowY="scroll"
                         position="absolute"
@@ -195,17 +217,24 @@ export const TodoList = ({searchParams}) => {
                         width="100%"
                     >
                         {filteredTags.map((tag, index) => (
-                            <Box
+                            <HStack
                                 key={index}
-                                p={2}
-                                _hover={{ backgroundColor: "purple.100", cursor: "pointer" }}
-                                onClick={() => {
-                                    setNewTags(newTags + tag + ', ');
-                                    setFilteredTags([]);
-                                }}
+                                onClick={(event) => handleTagClick(tag, event)}
+                                _hover={{ cursor: 'pointer' }}
+                                p={1}
                             >
-                                {tag}
-                            </Box>
+                                <Tag
+                                    size="lg"
+                                    variant="subtle"
+                                    colorScheme="purple"
+                                    borderRadius="md"
+                                    px={4}
+                                    py={1.5}
+                                    height="32px"
+                                >
+                                    <TagLabel fontSize="sm" fontWeight="medium">{tag}</TagLabel>
+                                </Tag>
+                            </HStack>
                         ))}
                     </Box>
                 )}
