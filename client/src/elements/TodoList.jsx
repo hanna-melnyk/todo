@@ -14,8 +14,8 @@ import { useLogin } from '../contexts/LoginContext';
 /*TodoList element accepts the searchParams prop from TodoPage*/
 export const TodoList = ({searchParams}) => {
     const [todos, setTodos] = useState([]);
-    const [newTodo, setNewTodo] = useState('');
-    const [newTags, setNewTags] = useState('');
+    const [todoName, setTodoName] = useState('');
+    const [tags, setTags] = useState('');
     const [editTodo, setEditTodo] = useState(null);
     const [error, setError] = useState(null);
     const [loadingTodos, setLoadingTodos] = useState(true);
@@ -61,18 +61,18 @@ export const TodoList = ({searchParams}) => {
 
     // Add a new todo
     const addTodo = async () => {
-        if (!newTodo.trim()) {
+        if (!todoName.trim()) {
             setError('Todo text cannot be empty.'); // Set error if input is empty
             return;
         }
 
         try {
             // Convert the comma-separated tags string into an array
-            const tagsArray = newTags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
-            const response = await authApi.post('/todos', { text: newTodo, tags: tagsArray });
+            const tagsArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+            const response = await authApi.post('/todos', { text: todoName, tags: tagsArray });
             setTodos([...todos, response.data]);
-            setNewTodo('');
-            setNewTags('');  // Clear the tags input after adding a todo
+            setTodoName('');
+            setTags('');  // Clear the tags input after adding a todo
             setError(''); // Clear error after successful addition
         } catch (error) {
             console.error('Error adding todo:', error);
@@ -106,16 +106,16 @@ export const TodoList = ({searchParams}) => {
     // Edit a todo (open modal)
     const handleEdit = (todo) => {
         setEditTodo(todo);  // Set the todo to be edited
-        setNewTodo(todo.text);  // Set the input to the todo text
-        setNewTags(todo.tags.join(', ')); // Set the input for the existing tags
+        setTodoName(todo.text);  // Set the input to the todo text
+        setTags(todo.tags.join(', ')); // Set the input for the existing tags
         onOpen();  // Open the modal for editing
     };
 
     // Function to handle cancel button click in modal
     const handleCancel = () => {
         setEditTodo(null);  // Clear the edit state
-        setNewTodo('');  // Reset the text input field
-        setNewTags('');  // Reset the tags input field
+        setTodoName('');  // Reset the text input field
+        setTags('');  // Reset the tags input field
         onClose();  // Close the modal
     };
 
@@ -125,11 +125,11 @@ export const TodoList = ({searchParams}) => {
     const saveTodo = async () => {
         if (editTodo) {
             try {
-                const updatedTodo = { ...editTodo, text: newTodo };
+                const updatedTodo = { ...editTodo, text: todoName };
                 await authApi.put(`/todos/${editTodo._id}`, updatedTodo);
                 setTodos(todos.map(t => (t._id === editTodo._id ? updatedTodo : t)));
                 setEditTodo(null);  // Clear the edit state
-                setNewTodo('');  // Clear the input field
+                setTodoName('');  // Clear the input field
                 onClose();  // Close the modal after saving
             } catch (error) {
                 console.error('Error saving todo:', error);
@@ -140,9 +140,9 @@ export const TodoList = ({searchParams}) => {
 
     // Filter tags based on input and exclude already selected tags
     useEffect(() => {
-        if (newTags) {
-            const searchValue = newTags.split(',').pop().trim();
-            const selectedTags = newTags.split(',').map(tag => tag.trim()).filter(tag => tag !== ''); // Get existing tags
+        if (tags) {
+            const searchValue = tags.split(',').pop().trim();
+            const selectedTags = tags.split(',').map(tag => tag.trim()).filter(tag => tag !== ''); // Get existing tags
             setFilteredTags(
                 allTags
                     .filter(tag => tag.toLowerCase().includes(searchValue.toLowerCase())) // Match with input
@@ -151,21 +151,21 @@ export const TodoList = ({searchParams}) => {
         } else {
             setFilteredTags([]);
         }
-    }, [newTags, allTags]);
+    }, [tags, allTags]);
 
     // Update the input field when a tag is clicked
     const handleTagClick = (tag, event) => {
         event.stopPropagation(); // Prevent click event from propagating
         console.log("Tag Clicked:", tag); // Log the clicked tag
         // Split the current input by commas to handle multiple tags
-        const tagsArray = newTags.split(',').map(tag => tag.trim());
+        const tagsArray = tags.split(',').map(tag => tag.trim());
         console.log("Before Update:", tagsArray); // Log the state before updating
         // Replace the last fragment with the selected tag
         tagsArray[tagsArray.length - 1] = tag;
         // Join the updated tags and add a comma
         const updatedTags = tagsArray.filter(t => t !== '').join(', ') + ', ';
         console.log("After Update:", updatedTags); // Log the updated tags string
-        setNewTags(updatedTags);
+        setTags(updatedTags);
         setFilteredTags([]);
         inputRef.current.focus(); // Keep focus on the input field
     };
@@ -203,8 +203,8 @@ export const TodoList = ({searchParams}) => {
 
             <Input
                 type="text"
-                value={newTodo}
-                onChange={(e) => setNewTodo(e.target.value)}
+                value={todoName}
+                onChange={(e) => setTodoName(e.target.value)}
                 placeholder="Add a new todo"
                 pb={2}
             />
@@ -212,10 +212,10 @@ export const TodoList = ({searchParams}) => {
             <Input
                 ref={inputRef} // Attach ref to the input
                 type="text"
-                value={newTags}
+                value={tags}
                 onChange={(e) => {
                     console.log("Current New Tags Input:", e.target.value); // Log the input value on change
-                    setNewTags(e.target.value);
+                    setTags(e.target.value);
                 }}
                 placeholder="Add tags (comma separated)"
                 pb={4}
@@ -326,14 +326,14 @@ export const TodoList = ({searchParams}) => {
                     <ModalHeader>Edit Todo</ModalHeader>
                     <ModalBody>
                         <Input
-                            value={newTodo}
-                            onChange={(e) => setNewTodo(e.target.value)}
+                            value={todoName}
+                            onChange={(e) => setTodoName(e.target.value)}
                             placeholder="Edit your todo text"
                             mb={4}
                         />
                         <Input
-                            value={newTags}
-                            onChange={(e) => setNewTags(e.target.value)}
+                            value={tags}
+                            onChange={(e) => setTags(e.target.value)}
                             placeholder="Edit tags (comma separated)"
                         />
                     </ModalBody>
