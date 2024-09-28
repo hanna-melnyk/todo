@@ -49,8 +49,8 @@ export const Navigation = () => {
     // };
 
     return (
-        <Box as="nav" bg={useColorModeValue('gray.100', 'gray.900')} p={4}>
-            <HStack spacing={6} justifyContent="space-between">
+        <Box as="nav" bg={useColorModeValue('gray.100', 'gray.900')} p={4} w="100vw" boxShadow="sm">
+            <HStack spacing={6} justifyContent="space-between" maxW="container.lg" mx="auto">
                 <HStack spacing={6}>
                     <Link as={RouterLink} to="/">
                         <HStack spacing={2}>
