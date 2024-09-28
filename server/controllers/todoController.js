@@ -58,15 +58,23 @@ export const addTodo = async (req, res) => {
     }
 };
 
-// Update a todo (including completion status)
+// Update a todo (including text, completion status, and tags)
 export const updateTodo = async (req, res) => {
-    const { text, completed } = req.body;
+    const { text, completed, tags } = req.body;  // Include tags in the update payload
     try {
+        const updatedFields = { text, completed };
+
+        // Update tags if provided in the request body
+        if (tags) {
+            updatedFields.tags = tags;
+        }
+
         const updatedTodo = await Todo.findByIdAndUpdate(
             req.params.id,
-            { text, completed },
+            updatedFields,
             { new: true }
         );
+
         res.json(updatedTodo);
     } catch (error) {
         res.status(500).json({ message: 'Error updating todo', error });

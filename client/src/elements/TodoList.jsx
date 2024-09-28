@@ -25,13 +25,7 @@ export const TodoList = ({searchParams}) => {
     const inputRef = useRef(); // New input ref for the tag input
     const navigate = useNavigate();
     const { isOpen, onOpen, onClose } = useDisclosure();  // useDisclosure for modal control
-
     const { isLoggedIn, loading } = useLogin(); // Use isLoggedIn and loading from context
-
-
-    // const storedUserInfo = JSON.parse(localStorage.getItem('userInfo'));
-    // const isLoggedIn = !!storedUserInfo && !!storedUserInfo.token; // Check if logged in
-
 
 
     const fetchTodos = async (params = {}) => {
@@ -62,8 +56,6 @@ export const TodoList = ({searchParams}) => {
 
     // Fetch todos when the component mounts or when searchParams change
     useEffect(() => {
-
-
         if (isLoggedIn) fetchTodos(searchParams);
     }, [authApi, isLoggedIn, navigate, searchParams]);
 
@@ -115,6 +107,7 @@ export const TodoList = ({searchParams}) => {
     const handleEdit = (todo) => {
         setEditTodo(todo);  // Set the todo to be edited
         setNewTodo(todo.text);  // Set the input to the todo text
+        setNewTags(todo.tags.join(', ')); // Set the input for the existing tags
         onOpen();  // Open the modal for editing
     };
 
@@ -172,10 +165,6 @@ export const TodoList = ({searchParams}) => {
         handler: () => setFilteredTags([]),
     });
 
-    // // Handle search criteria update from SearchBar component
-    // const handleSearch = (searchParams) => {
-    //     fetchTodos(searchParams);  // Fetch todos based on new search parameters
-    // };
 
     // Conditional rendering based on error, loading, and todos length
     if (loading || loadingTodos) return <p>Loading...</p>; // Show loading state
@@ -320,6 +309,7 @@ export const TodoList = ({searchParams}) => {
                 )}
             </List>
 
+            {/* Combined Modal for Editing Text and Tags */}
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
@@ -328,7 +318,13 @@ export const TodoList = ({searchParams}) => {
                         <Input
                             value={newTodo}
                             onChange={(e) => setNewTodo(e.target.value)}
-                            placeholder="Edit your todo"
+                            placeholder="Edit your todo text"
+                            mb={4}
+                        />
+                        <Input
+                            value={newTags}
+                            onChange={(e) => setNewTags(e.target.value)}
+                            placeholder="Edit tags (comma separated)"
                         />
                     </ModalBody>
                     <ModalFooter>
