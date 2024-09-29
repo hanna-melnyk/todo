@@ -12,14 +12,14 @@ import { useLogin } from '../contexts/LoginContext';
 
 
 /*TodoList element accepts the searchParams prop from TodoPage*/
-export const TodoList = ({searchParams}) => {
+export const TodoList = ({ searchParams, setAllTags, allTags }) => {
     const [todos, setTodos] = useState([]);
     const [todoName, setTodoName] = useState('');
     const [tags, setTags] = useState('');
     const [editTodo, setEditTodo] = useState(null);
     const [error, setError] = useState(null);
     const [loadingTodos, setLoadingTodos] = useState(true);
-    const [allTags, setAllTags] = useState([]); // State to hold all existing tags
+    // const [allTags, setAllTags] = useState([]); // State to hold all existing tags - TO DELETE: passed as props
     const [filteredTags, setFilteredTags] = useState([]); // Filtered tag suggestions
     const menuRef = useRef(); // Ref to handle outside click for tag suggestions
     const inputRef = useRef(); // New input ref for the tag input
@@ -30,9 +30,16 @@ export const TodoList = ({searchParams}) => {
 
     const fetchTodos = async (params = {}) => {
         try {
+            /*Developer log to see params*/
+            console.log("Fetching todos with params:", params);
             const response = await authApi.get('/todos', { params: params });
-            setTodos(response.data);
-            setAllTags([...new Set(response.data.flatMap(todo => todo.tags))]); // Extract unique tags
+            const todos = response.data;
+            console.log("Todos received:", todos);  // Log todos received
+            setTodos(todos);
+
+            // Extract unique tags and update the parent `allTags`
+            const uniqueTags = [...new Set(todos.flatMap(todo => todo.tags))];
+            setAllTags(uniqueTags); // Call the `setAllTags` prop passed from `TodoPage`
             setError(null);
         } catch (error) {
             if (error.response && error.response.status === 401) {

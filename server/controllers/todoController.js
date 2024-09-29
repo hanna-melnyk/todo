@@ -18,8 +18,11 @@ export const getAllTodos = async (req, res) => {
         // Add tags search condition if provided
         if (tags) {
             const tagsArray = tags.split(',').map(tag => tag.trim());  // Split tags by comma to handle multiple tags
-            const tagConditions = tagsArray.map(tag => ({ tags: { $regex: new RegExp(tag, 'i') } })); // Create case-insensitive regex conditions for each tag
-            conditions.push({ $or: tagConditions });  // Match any of the provided tags (case-insensitive)
+            // Match tags by converting both sides to lowercase
+            const tagConditions = tagsArray.map(tag => ({
+                $expr: { $in: [tag, { $map: { input: "$tags", as: "t", in: { $toLower: "$$t" } } }] }
+            }));
+            conditions.push({ $or: tagConditions });
         }
 
 
