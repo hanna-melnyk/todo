@@ -6,9 +6,8 @@ export const getAllTodos = async (req, res) => {
     const { text, tags, strict } = req.query;
 
     try {
-    const filter = { user: req.user._id };
-    const conditions = []; // Array to store individual conditions for the query
-
+        const filter = { user: req.user._id };
+        let conditions = []; // Array to store individual conditions for the query
 
         // Add text search condition if provided
         if (text) {
@@ -18,24 +17,28 @@ export const getAllTodos = async (req, res) => {
         // Add tags search condition if provided
         if (tags) {
             const tagsArray = tags.split(',').map(tag => tag.trim());  // Split tags by comma to handle multiple tags
-            // Match tags by converting both sides to lowercase
-            const tagConditions = tagsArray.map(tag => ({
-                $expr: { $in: [tag, { $map: { input: "$tags", as: "t", in: { $toLower: "$$t" } } }] }
-            }));
-            conditions.push({ $or: tagConditions });
+
+            // Create case-insensitive regex conditions for each tag using `^` and `$` to match exact tags
+            const tagConditions = tagsArray.map(tag => ({ tags: { $regex: new RegExp(`^${tag}$`, 'i') } }));
+
+            // Determine AND or OR condition based on the `strict` parameter
+            if (strict === 'true') {
+                // Use AND condition: all tags must be present
+                conditions = [...conditions, ...tagConditions];
+            } else {
+                // Use OR condition: match any of the provided tags
+                if (tagConditions.length > 0) {
+                    filter.$or = tagConditions;  // Directly assign `$or` to `filter`
+                }
+            }
         }
 
-
-    // Apply the appropriate query condition based on the `strict` parameter
-    if (conditions.length > 0) {
-        if (strict === 'true') {
-            filter.$and = conditions;  // Strict (AND) condition: all conditions must be met
-        } else {
-            filter.$or = conditions;  // Non-strict (OR) condition: any condition can be met
+        // Apply the appropriate query condition based on the `conditions` array
+        if (strict === 'true' && conditions.length > 0) {
+            filter.$and = conditions;  // Use AND only if strict is true
         }
-    }
 
-
+        console.log('from getAllTodos(): filter:', JSON.stringify(filter, null, 2));
 
         const todos = await Todo.find(filter); // Find todos for the logged-in user
         res.json(todos);
@@ -43,6 +46,7 @@ export const getAllTodos = async (req, res) => {
         res.status(500).json({ message: 'Error fetching todos', error });
     }
 };
+
 
 // Add a new todo
 export const addTodo = async (req, res) => {

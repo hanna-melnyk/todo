@@ -1,5 +1,5 @@
 // client/src/elements/TodoPage.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Divider, Container, Center } from '@chakra-ui/react';
 import { SearchBar } from './SearchBar.jsx';
 import { TodoList } from './TodoList.jsx';
@@ -11,6 +11,12 @@ export const TodoPage = () => {
     * it passes down the search criteria to both components (SearchBar for handling user inputs and TodoList for fetching and displaying filtered data).
     * "Top-Down Data Flow": parent component manages the state and passes down data or functions as props.*/
     const [allTags, setAllTags] = useState([]);  // State to hold all tags for shared use
+
+/*useEffect for debugging purposes*/
+    useEffect(() => {
+        console.log("Updated All Tags in TodoPage:", allTags);  // Log updated tags in `TodoPage`
+    }, [allTags]);
+
 
 
     // Define the search handler

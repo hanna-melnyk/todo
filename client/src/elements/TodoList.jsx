@@ -78,6 +78,11 @@ export const TodoList = ({ searchParams, setAllTags, allTags }) => {
             const tagsArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
             const response = await authApi.post('/todos', { text: todoName, tags: tagsArray });
             setTodos([...todos, response.data]);
+
+            // Update the `allTags` list in the parent (`TodoPage`) with the new tags
+            const uniqueTags = [...new Set([...allTags, ...tagsArray])];  // Keep the tags in their original case
+            setAllTags(uniqueTags);  // Call the `setAllTags` function from the parent component
+
             setTodoName('');
             setTags('');  // Clear the tags input after adding a todo
             setError(''); // Clear error after successful addition
