@@ -24,14 +24,16 @@ import { GoKebabHorizontal } from 'react-icons/go';
 import { FiFilter } from "react-icons/fi";
 
 
-// Field type configuration object
-const todoFieldTypes = {
-    text: 'text', // Field type for todo text
-    tags: 'tags', // Field type for tags
-    completed: 'checkbox', // Field type for checkbox status
-};
+/*todoFields object
+*stores possible filter options for the `FilterTag` */
+const todoFields = [
+    { label: 'Todo Text', type: 'text', databaseName: 'text'}, // Maps to `text` field in the database
+    { label: 'Tags', type: 'tags', databaseName: 'tags'}, // Maps to `tags` field in the database
+    { label: 'Completed', type: 'checkbox', databaseName: 'completed'},  // Maps to `completed` field in the database
+];
 
-const FilterTag = ({ type, value, onValueChange, onDelete, allTags }) => {
+/*FilterTag component is used to return custom designs for each field type*/
+const FilterTag = ({ type, value, name, onValueChange, onDelete, allTags }) => {
     const [showMenu, setShowMenu] = useState(false);
     const [currentValue, setCurrentValue] = useState(value);
     const [filteredTags, setFilteredTags] = useState([]);
@@ -87,17 +89,24 @@ const FilterTag = ({ type, value, onValueChange, onDelete, allTags }) => {
         inputRef.current.focus(); // Keep focus on the input field
     };
 
+
+    const handleCheckboxSelection = (option) => {
+        setCurrentValue(option);
+        onValueChange(option);
+        setShowMenu(false);
+    };
+
     // Define custom input UI for each filter type
     const renderFilterInput = () => {
         switch (type) {
             case 'text':
-                return <Input placeholder={`Search by ${type}`} value={currentValue} onChange={handleInputChange} />;
+                return <Input placeholder={`Search by ${name}`} value={currentValue} onChange={handleInputChange} />;
             case 'tags':
                 return (
                     <Box>
                         <Input
                             ref={inputRef}
-                            placeholder={`Search by tags (comma separated)`}
+                            placeholder={`Search by ${name}, comma separated`}
                             value={currentValue}
                             onChange={handleInputChange}
                             mb={2}
@@ -137,16 +146,16 @@ const FilterTag = ({ type, value, onValueChange, onDelete, allTags }) => {
                 );
             case 'checkbox':
                 return (
-                    <Menu>
-                        <MenuButton as={Button} size="sm" variant="outline">
-                            {currentValue || 'Choose Status'}
-                        </MenuButton>
-                        <MenuList>
-                            <MenuItem onClick={() => { setCurrentValue('Checked'); onValueChange('Checked'); }}>Checked</MenuItem>
-                            <MenuItem onClick={() => { setCurrentValue('Unchecked'); onValueChange('Unchecked'); }}>Unchecked</MenuItem>
-                            <MenuItem onClick={() => { setCurrentValue('Clear'); onValueChange('Clear'); }}>Clear</MenuItem>
-                        </MenuList>
-                    </Menu>
+                        <Box>
+                            {/* Options for Checkbox */}
+                            <Box onClick={() => handleCheckboxSelection('Checked')} p={2} cursor="pointer" _hover={{ bg: 'gray.100' }}>
+                                <Text>Checked</Text>
+                            </Box>
+
+                            <Box onClick={() => handleCheckboxSelection('Unchecked')} p={2} cursor="pointer" _hover={{ bg: 'gray.100' }}>
+                                <Text>Unchecked</Text>
+                            </Box>
+                        </Box>
                 );
             default:
                 return null;
@@ -201,7 +210,7 @@ export const SearchBar = ({ onSearch, allTags }) => {
 
 
     useEffect(() => {
-        // Update available tags based on existing filters
+        // Update unique tags list based on existing filters
         const selectedTags = filters.filter((filter) => filter.type === 'tags').map((filter) => filter.value);
         const availableTags = allTags.filter((tag) => !selectedTags.includes(tag));
         setTagsInFilterMenu(availableTags);
@@ -213,8 +222,16 @@ export const SearchBar = ({ onSearch, allTags }) => {
     }, [filters]);
 
 
-    const addFilter = (filterType) => {
-        setFilters([...filters, { type: filterType, value: '' }]);
+    // Function to add a new filter by selecting filter configuration from `todoFields` array
+    const addFilter = (label) => {
+
+        // Find the field configuration for the selected filter type
+        const fieldConfig = todoFields.find(todoField => todoField.label === label);
+        // Ensure a valid field configuration is found
+        if (!fieldConfig) return;
+
+        // Add the filter using the type and corresponding field label from the configuration
+        setFilters([...filters, { label: fieldConfig.label, type: fieldConfig.type, name: fieldConfig.databaseName, value: '' }]);
         setFilterMenuOpen(false);
     };
 
@@ -245,6 +262,13 @@ export const SearchBar = ({ onSearch, allTags }) => {
                         .map(tag => tag.trim())  // Normalize: trim
                         .filter(tag => tag)                   // Remove any empty tags
                         .join(', ');                          // Join into a cleaned comma-separated string
+                } else if(filter.type.toLowerCase() === 'checkbox') {
+                    // Convert `Checked` to `true` and `Unchecked` to `false`
+                    const normalizedValue = filter.value === 'Checked' ? true : filter.value === 'Unchecked' ? false : undefined;
+                    if (normalizedValue !== undefined) {
+                        // Include the field name (e.g., "completed: true")
+                        searchParams[filter.name] = normalizedValue;
+                    }
                 } else {
                     searchParams[filter.type.toLowerCase()] = filter.value.trim();
                 }
@@ -266,7 +290,7 @@ export const SearchBar = ({ onSearch, allTags }) => {
                     aria-label="Toggle Filters"
                     onClick={() => setShowFilters(!showFilters)}  // Toggle show/hide filters
                     variant="ghost"
-                    colorScheme="teal"
+                    colorScheme="purple"
                     size="md"
                 />
             </HStack>
@@ -284,6 +308,7 @@ export const SearchBar = ({ onSearch, allTags }) => {
                                 key={index}
                                 type={filter.type}
                                 value={filter.value}
+                                name={filter.name}
                                 allTags={allTags} //pass allTags rom SearchBar to FilterTag
                                 onValueChange={(value) => updateFilterValue(index, value)}
                                 onDelete={() => removeFilter(index)}
@@ -322,13 +347,15 @@ export const SearchBar = ({ onSearch, allTags }) => {
                                     p={2}
                                 >
                                     <Text fontSize="sm" color="gray.600" mb={2}>
-                                        Choose filter type
+                                        Choose filter
                                     </Text>
-                                    {Object.keys(todoFieldTypes).map((field, index) => (
-                                        <Box key={index} onClick={() => addFilter(todoFieldTypes[field])} p={2} cursor="pointer" _hover={{ bg: 'gray.100' }}>
-                                            {field.charAt(0).toUpperCase() + field.slice(1)}
+
+                                    {todoFields.map((field, index) => (
+                                        <Box key={index} onClick={() => addFilter(field.label)} p={2} cursor="pointer" _hover={{ bg: 'gray.100' }}>
+                                            {field.label}
                                         </Box>
                                     ))}
+
                                 </Box>
                             )}
                         </Box>

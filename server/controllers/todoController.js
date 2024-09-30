@@ -3,7 +3,7 @@ import { Todo } from '../models/TodoModel.js';
 
 // Get all todos
 export const getAllTodos = async (req, res) => {
-    const { text, tags, strict } = req.query;
+    const { text, tags, strict, completed  } = req.query;
 
     try {
         // Step 1: Initialize the filter with the user condition
@@ -44,6 +44,17 @@ export const getAllTodos = async (req, res) => {
         } else {
             console.log('No tag condition added. Tags parameter was empty or undefined.');
         }
+
+        // Step 4: Add completed condition if provided
+        if (completed !== undefined) {
+            // Convert the string "true"/"false" to a boolean value
+            const completedValue = completed.toLowerCase() === 'true';
+            conditions.push({ completed: completedValue });
+            console.log(`Added completed condition: { completed: ${completedValue} }`);
+        } else {
+            console.log('No comleted condition added. Tags parameter was empty or undefined.');
+        }
+
 
         // Step 4: Construct the final query filter based on conditions and `strict` parameter
         if (strict === 'true' && conditions.length > 0) {
