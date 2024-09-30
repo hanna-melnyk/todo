@@ -17,6 +17,7 @@ import {
     Button,
     Checkbox,
     VStack,
+    Divider
 } from '@chakra-ui/react';
 import { ChevronDownIcon, AddIcon, DeleteIcon, SmallCloseIcon } from '@chakra-ui/icons';
 import { GoKebabHorizontal } from 'react-icons/go';
@@ -197,11 +198,16 @@ export const SearchBar = ({ onSearch, allTags }) => {
 
 
     useEffect(() => {
-        // Update dropdown list based on allTags and exclude selected filter tags
+        // Update available tags based on existing filters
         const selectedTags = filters.filter((filter) => filter.type === 'tags').map((filter) => filter.value);
         const availableTags = allTags.filter((tag) => !selectedTags.includes(tag));
         setTagsInFilterMenu(availableTags);
     }, [allTags, filters]);
+
+    // Automatically trigger search whenever filters change
+    useEffect(() => {
+        handleSearch(); // Trigger the search function automatically whenever a filter changes
+    }, [filters]);
 
 
     const addFilter = (filterType) => {
@@ -217,6 +223,11 @@ export const SearchBar = ({ onSearch, allTags }) => {
     const removeFilter = (index) => {
         const updatedFilters = filters.filter((_, i) => i !== index);
         setFilters(updatedFilters);
+    };
+
+    const resetFilters = () => {
+        setFilters([]);  // Clear all filters
+        onSearch({});  // Reset search parameters in the parent component
     };
 
     // Trigger search by calling onSearch with filter values
@@ -244,6 +255,12 @@ export const SearchBar = ({ onSearch, allTags }) => {
 
     return (
         <Box w="100%" p={2} position="relative">
+            {/* Title Section */}
+            <Text fontSize="2xl" fontWeight="bold" mb={2}>Todos</Text>
+            {/* Divider Line */}
+            <Divider mb={4} />
+
+            {/* Filter Section */}
             <HStack p={2} spacing={3}>
                 {filters.map((filter, index) => (
                     <FilterTag
@@ -255,7 +272,10 @@ export const SearchBar = ({ onSearch, allTags }) => {
                         onDelete={() => removeFilter(index)}
                     />
                 ))}
+
+
                 <Box position="relative" display="inline-block">
+                    {/* Add Filter Button */}
                     <Button
                         onClick={() => setFilterMenuOpen(!filterMenuOpen)}
                         leftIcon={<AddIcon />}
@@ -295,13 +315,24 @@ export const SearchBar = ({ onSearch, allTags }) => {
                         </Box>
                     )}
                 </Box>
-            </HStack>
 
-            <Box p={2} textAlign="right">
-                <Button colorScheme="purple" onClick={handleSearch}>
-                    Search
-                </Button>
-            </Box>
+                {/* Reset Filter Button */}
+                <Box position="relative" display="inline-block" marginLeft="auto">
+                    <Button
+                        onClick={resetFilters}
+                        colorScheme="red"
+                        variant="outline"
+                        borderRadius="md"
+                        borderStyle="dashed"  // Apply dashed border style
+                        _hover={{ bg: 'red.100' }}
+                        size="sm"
+                        px={4}
+                        py={2}
+                    >
+                        Reset Filters
+                    </Button>
+                </Box>
+            </HStack>
         </Box>
     );
 };

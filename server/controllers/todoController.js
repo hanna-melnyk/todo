@@ -31,7 +31,7 @@ export const getAllTodos = async (req, res) => {
         // Step 3: Add tags search condition if provided
         if (tags) {
             const tagsArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
-            const tagConditions = tagsArray.map(tag => ({ tags: { $regex: new RegExp(`^${tag}$`, 'i') } }));
+            const tagConditions = tagsArray.map(tag => ({ tags: { $regex: new RegExp(`^${tag}`, 'i') } }));
 
             if (strict === 'true') {
                 conditions.push(...tagConditions); // AND condition: Add all tag conditions separately
