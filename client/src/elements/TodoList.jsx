@@ -19,13 +19,15 @@ export const TodoList = ({ searchParams, setAllTags, allTags }) => {
     const [editTodo, setEditTodo] = useState(null);
     const [error, setError] = useState(null);
     const [loadingTodos, setLoadingTodos] = useState(true);
-    // const [allTags, setAllTags] = useState([]); // State to hold all existing tags - TO DELETE: passed as props
     const [filteredTags, setFilteredTags] = useState([]); // Filtered tag suggestions
     const menuRef = useRef(); // Ref to handle outside click for tag suggestions
     const inputRef = useRef(); // New input ref for the tag input
     const navigate = useNavigate();
     const { isOpen, onOpen, onClose } = useDisclosure();  // useDisclosure for modal control
     const { isLoggedIn, loading } = useLogin(); // Use isLoggedIn and loading from context
+    /*Separate states for "Add Todo" and "Edit Todo"*/
+    const [editTodoName, setEditTodoName] = useState('');
+    const [editTags, setEditTags] = useState('');
 
 
     const fetchTodos = async (params = {}) => {
@@ -117,10 +119,10 @@ export const TodoList = ({ searchParams, setAllTags, allTags }) => {
 
     // Edit a todo (open modal)
     const handleEdit = (todo) => {
-        setEditTodo(todo);  // Set the todo to be edited
-        setTodoName(todo.text);  // Set the input to the todo text
-        setTags(todo.tags.join(', ')); // Set the input for the existing tags
-        onOpen();  // Open the modal for editing
+        setEditTodo(todo);
+        setEditTodoName(todo.text);
+        setEditTags(todo.tags.join(', '));
+        onOpen();
     };
 
     // Function to handle cancel button click in modal
@@ -137,11 +139,17 @@ export const TodoList = ({ searchParams, setAllTags, allTags }) => {
     const saveTodo = async () => {
         if (editTodo) {
             try {
-                const updatedTodo = { ...editTodo, text: todoName };
+                const tagsArray = editTags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+                const updatedTodo = { ...editTodo, text: editTodoName, tags: tagsArray };
                 await authApi.put(`/todos/${editTodo._id}`, updatedTodo);
                 setTodos(todos.map(t => (t._id === editTodo._id ? updatedTodo : t)));
-                setEditTodo(null);  // Clear the edit state
-                setTodoName('');  // Clear the input field
+
+                // Update allTags with the new and existing tags
+                const uniqueTags = [...new Set([...allTags, ...tagsArray])];
+                setAllTags(uniqueTags);  // Update the global tag list immediately
+                setEditTodo(null);
+                setEditTodoName('');
+                setEditTags('');
                 onClose();  // Close the modal after saving
             } catch (error) {
                 console.error('Error saving todo:', error);
@@ -338,14 +346,14 @@ export const TodoList = ({ searchParams, setAllTags, allTags }) => {
                     <ModalHeader>Edit Todo</ModalHeader>
                     <ModalBody>
                         <Input
-                            value={todoName}
-                            onChange={(e) => setTodoName(e.target.value)}
+                            value={editTodoName}
+                            onChange={(e) => setEditTodoName(e.target.value)}
                             placeholder="Edit your todo text"
                             mb={4}
                         />
                         <Input
-                            value={tags}
-                            onChange={(e) => setTags(e.target.value)}
+                            value={editTags}
+                            onChange={(e) => setEditTags(e.target.value)}
                             placeholder="Edit tags (comma separated)"
                         />
                     </ModalBody>
