@@ -21,6 +21,7 @@ import {
 } from '@chakra-ui/react';
 import { ChevronDownIcon, AddIcon, DeleteIcon, SmallCloseIcon } from '@chakra-ui/icons';
 import { GoKebabHorizontal } from 'react-icons/go';
+import { FiFilter } from "react-icons/fi";
 
 
 // Field type configuration object
@@ -36,6 +37,7 @@ const FilterTag = ({ type, value, onValueChange, onDelete, allTags }) => {
     const [filteredTags, setFilteredTags] = useState([]);
     const inputRef = useRef(null);
     const menuRef = useRef(null);
+
 
     useEffect(() => {
         setCurrentValue(value);
@@ -195,6 +197,7 @@ export const SearchBar = ({ onSearch, allTags }) => {
     const [filterMenuOpen, setFilterMenuOpen] = useState(false);
     // const filterMenuRef = useRef();
     const [tagsInFilterMenu, setTagsInFilterMenu] = useState([]);
+    const [showFilters, setShowFilters] = useState(true); // State to show/hide the filter section
 
 
     useEffect(() => {
@@ -255,84 +258,100 @@ export const SearchBar = ({ onSearch, allTags }) => {
 
     return (
         <Box w="100%" p={2} position="relative">
-            {/* Title Section */}
-            <Text fontSize="2xl" fontWeight="bold" mb={2}>Todos</Text>
+            {/* Title Section with Filter Toggle Button */}
+            <HStack justifyContent="space-between" mb={2}>
+                <Text fontSize="2xl" fontWeight="bold">Todos</Text>
+                <IconButton
+                    icon={<FiFilter />}  // Use the filter icon
+                    aria-label="Toggle Filters"
+                    onClick={() => setShowFilters(!showFilters)}  // Toggle show/hide filters
+                    variant="ghost"
+                    colorScheme="teal"
+                    size="md"
+                />
+            </HStack>
             {/* Divider Line */}
             <Divider mb={4} />
 
-            {/* Filter Section */}
-            <HStack p={2} spacing={3}>
-                {filters.map((filter, index) => (
-                    <FilterTag
-                        key={index}
-                        type={filter.type}
-                        value={filter.value}
-                        allTags={allTags} //pass allTags rom SearchBar to FilterTag
-                        onValueChange={(value) => updateFilterValue(index, value)}
-                        onDelete={() => removeFilter(index)}
-                    />
-                ))}
+
+            {/* Conditional Rendering of Filter Section */}
+            {showFilters && (
+                <>
+                    {/* Filter Section */}
+                    <HStack p={2} spacing={3}>
+                        {filters.map((filter, index) => (
+                            <FilterTag
+                                key={index}
+                                type={filter.type}
+                                value={filter.value}
+                                allTags={allTags} //pass allTags rom SearchBar to FilterTag
+                                onValueChange={(value) => updateFilterValue(index, value)}
+                                onDelete={() => removeFilter(index)}
+                            />
+                        ))}
 
 
-                <Box position="relative" display="inline-block">
-                    {/* Add Filter Button */}
-                    <Button
-                        onClick={() => setFilterMenuOpen(!filterMenuOpen)}
-                        leftIcon={<AddIcon />}
-                        variant="ghost"
-                        color="gray.600"
-                        borderRadius="md"
-                        _hover={{ bg: 'gray.100' }}
-                        size="sm"
-                        px={4}
-                        py={2}
-                        bg="transparent"
-                        boxShadow="none"
-                    >
-                        Add Filter
-                    </Button>
-                    {filterMenuOpen && (
-                        <Box
-                            position="absolute"
-                            top="100%"
-                            mt={2}
-                            zIndex={1}
-                            bg="white"
-                            border="1px solid #E2E8F0"
-                            boxShadow="md"
-                            borderRadius="md"
-                            width="200px"
-                            p={2}
-                        >
-                            <Text fontSize="sm" color="gray.600" mb={2}>
-                                Choose filter type
-                            </Text>
-                            {Object.keys(todoFieldTypes).map((field, index) => (
-                                <Box key={index} onClick={() => addFilter(todoFieldTypes[field])} p={2} cursor="pointer" _hover={{ bg: 'gray.100' }}>
-                                    {field.charAt(0).toUpperCase() + field.slice(1)}
+                        <Box position="relative" display="inline-block">
+                            {/* Add Filter Button */}
+                            <Button
+                                onClick={() => setFilterMenuOpen(!filterMenuOpen)}
+                                leftIcon={<AddIcon />}
+                                variant="ghost"
+                                color="gray.600"
+                                borderRadius="md"
+                                _hover={{ bg: 'gray.100' }}
+                                size="sm"
+                                px={4}
+                                py={2}
+                                bg="transparent"
+                                boxShadow="none"
+                            >
+                                Add Filter
+                            </Button>
+                            {filterMenuOpen && (
+                                <Box
+                                    position="absolute"
+                                    top="100%"
+                                    mt={2}
+                                    zIndex={1}
+                                    bg="white"
+                                    border="1px solid #E2E8F0"
+                                    boxShadow="md"
+                                    borderRadius="md"
+                                    width="200px"
+                                    p={2}
+                                >
+                                    <Text fontSize="sm" color="gray.600" mb={2}>
+                                        Choose filter type
+                                    </Text>
+                                    {Object.keys(todoFieldTypes).map((field, index) => (
+                                        <Box key={index} onClick={() => addFilter(todoFieldTypes[field])} p={2} cursor="pointer" _hover={{ bg: 'gray.100' }}>
+                                            {field.charAt(0).toUpperCase() + field.slice(1)}
+                                        </Box>
+                                    ))}
                                 </Box>
-                            ))}
+                            )}
                         </Box>
-                    )}
-                </Box>
 
-                {/* Reset Filter Button */}
-                <Box position="relative" display="inline-block" marginLeft="auto">
-                    <Button
-                        onClick={resetFilters}
-                        colorScheme="red"
-                        variant="outline"
-                        borderRadius="md"
-                        borderStyle="dashed"  // Apply dashed border style
-                        _hover={{ bg: 'red.100' }}
-                        size="sm"
-                        px={4}
-                        py={2}
-                    >
-                        Reset Filters
-                    </Button>
-                </Box>
-            </HStack>
+                        {/* Reset Filter Button */}
+                        <Box position="relative" display="inline-block" marginLeft="auto">
+                            <Button
+                                onClick={resetFilters}
+                                colorScheme="red"
+                                variant="outline"
+                                borderRadius="md"
+                                borderStyle="dashed"  // Apply dashed border style
+                                _hover={{ bg: 'red.100' }}
+                                size="sm"
+                                px={4}
+                                py={2}
+                            >
+                                Reset Filters
+                            </Button>
+                        </Box>
+                    </HStack>
+                </>
+                )}
         </Box>
     );
 };
