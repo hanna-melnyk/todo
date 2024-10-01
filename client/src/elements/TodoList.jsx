@@ -5,11 +5,12 @@ import authApi from '../api/axiosTokenInterceptor';
 import {
     Box, Button, ButtonGroup, Input, List, ListItem, Text, Checkbox, IconButton, useDisclosure, Modal,
     ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, HStack, Tag, TagLabel,
-    Alert, AlertIcon, AlertTitle, AlertDescription, useOutsideClick
+    Alert, AlertIcon, AlertTitle, AlertDescription, useOutsideClick, useColorMode
 } from '@chakra-ui/react';
 import { EditIcon, DeleteIcon, AddIcon, CloseIcon } from '@chakra-ui/icons';
 import { useLogin } from '../contexts/LoginContext';
 import {NewTodoForm} from "./NewTodoForm.jsx";
+import {getTransparentContainerStyle} from "../theme-helper.js";
 
 
 /*TodoList element accepts the searchParams prop from TodoPage*/
@@ -30,7 +31,7 @@ export const TodoList = ({ searchParams, setAllTags, allTags }) => {
     const [editTodoName, setEditTodoName] = useState('');
     const [editTags, setEditTags] = useState('');
     const [showTodoForm, setShowTodoForm] = useState(false); // State to show/hide the new todo form
-
+    const { colorMode } = useColorMode(); // Use `useColorMode` to get the current color mode
 
     const fetchTodos = async (params = {}) => {
         try {
@@ -164,20 +165,6 @@ export const TodoList = ({ searchParams, setAllTags, allTags }) => {
         }
     };
 
-    // // Filter tags based on input and exclude already selected tags
-    // useEffect(() => {
-    //     if (tags) {
-    //         const searchValue = tags.split(',').pop().trim();
-    //         const selectedTags = tags.split(',').map(tag => tag.trim()).filter(tag => tag !== ''); // Get existing tags
-    //         setFilteredTags(
-    //             allTags
-    //                 .filter(tag => tag.toLowerCase().includes(searchValue.toLowerCase())) // Match with input
-    //                 .filter(tag => !selectedTags.includes(tag)) // Exclude selected tags
-    //         );
-    //     } else {
-    //         setFilteredTags([]);
-    //     }
-    // }, [tags, allTags]);
 
     // Update the input field when a tag is clicked
     const handleTagClick = (tag, event) => {
@@ -195,11 +182,6 @@ export const TodoList = ({ searchParams, setAllTags, allTags }) => {
         setFilteredTags([]);
         inputRef.current.focus(); // Keep focus on the input field
     };
-
-    // useOutsideClick({
-    //     ref: menuRef,
-    //     handler: () => setFilteredTags([]),
-    // });
 
 
     // Conditional rendering based on error, loading, and todos length
@@ -225,14 +207,28 @@ export const TodoList = ({ searchParams, setAllTags, allTags }) => {
             )}
 
             {/* ButtonGroup for New/Save functionality */}
-            <ButtonGroup size="sm" isAttached variant="outline" mb={4}>
-                <Button onClick={() => setShowTodoForm(!showTodoForm)}>
+            <ButtonGroup size="sm" isAttached mb={4}>
+                <Button
+                    onClick={() => setShowTodoForm(!showTodoForm)}
+                    bg="#611FEA"  // Correct background color
+                    color="white" // Ensure text is white
+                    _hover={{ bg: "#5316C4" }} // Maintain a consistent hover color
+                    _active={{ bg: "#4a13b3" }} // Define active color
+                    border="none" // Remove borders
+                    borderRadius="md"
+                >
                     {showTodoForm ? 'Cancel' : 'New'}
                 </Button>
                 <IconButton
                     aria-label={showTodoForm ? 'Close form' : 'Open form'}
                     icon={showTodoForm ? <CloseIcon /> : <AddIcon />}
                     onClick={() => setShowTodoForm(!showTodoForm)}
+                    bg="#611FEA"
+                    color="white"
+                    _hover={{ bg: "#5316C4" }}
+                    _active={{ bg: "#4a13b3" }}
+                    border="none" // Remove borders for consistency
+                    borderRadius="md"
                 />
             </ButtonGroup>
 
@@ -246,73 +242,33 @@ export const TodoList = ({ searchParams, setAllTags, allTags }) => {
             )}
 
 
-
-            {/*<Box position="relative">*/}
-            {/*    {filteredTags.length > 0 && (*/}
-            {/*        <Box*/}
-            {/*            ref={menuRef} // Attach the ref to the dropdown menu container*/}
-            {/*            maxH="200px"*/}
-            {/*            overflowY="scroll"*/}
-            {/*            position="absolute"*/}
-            {/*            top="100%"*/}
-            {/*            zIndex={1}*/}
-            {/*            boxShadow="md"*/}
-            {/*            bg="white"*/}
-            {/*            border="1px solid #E2E8F0"*/}
-            {/*            width="100%"*/}
-            {/*        >*/}
-            {/*            {filteredTags.map((tag, index) => (*/}
-            {/*                <HStack*/}
-            {/*                    key={index}*/}
-            {/*                    onClick={(event) => handleTagClick(tag, event)}*/}
-            {/*                    _hover={{ cursor: 'pointer' }}*/}
-            {/*                    p={1}*/}
-            {/*                >*/}
-            {/*                    <Tag*/}
-            {/*                        size="lg"*/}
-            {/*                        variant="subtle"*/}
-            {/*                        colorScheme="purple"*/}
-            {/*                        borderRadius="md"*/}
-            {/*                        px={4}*/}
-            {/*                        py={1.5}*/}
-            {/*                        height="32px"*/}
-            {/*                    >*/}
-            {/*                        <TagLabel fontSize="sm" fontWeight="medium">{tag}</TagLabel>*/}
-            {/*                    </Tag>*/}
-            {/*                </HStack>*/}
-            {/*            ))}*/}
-            {/*        </Box>*/}
-            {/*    )}*/}
-            {/*</Box>*/}
-
-
-            {/*<Button onClick={addTodo} colorScheme="purple" width="full" pb={4}>Add Todo</Button>*/}
-
-
             {/* Display the list of todos */}
             <List>
                 {todos.length > 0 ? (
                     todos.map(todo => (
                         <ListItem
                             key={todo._id}
-                            p={4}
-                            mb={2}
-                            borderRadius="md"
-                            bg="rgba(239, 239, 239, 0.8)" // Semi-transparent background for each todo item
                             display="flex"
                             justifyContent="space-between"
                             alignItems="center"
+                            {...getTransparentContainerStyle(colorMode)} // Pass colorMode to getListItemStyles
                         >
                             <HStack flex="1" spacing={5} onClick={() => toggleTodo(todo)} cursor="pointer">
                                 <Checkbox
                                     isChecked={todo.completed}
-                                    colorScheme="purple"
+                                    colorScheme="none" // Remove default Chakra color scheme
+                                    borderColor="#5316C4"
+                                    _checked={{
+                                        borderColor: "#5316C4", // When checked, set the border color to match outline color
+                                        bg: "#5316C4", // Set background color when checked
+                                        color: "white", // Color of the checkmark icon (if iconColor is not used)
+                                    }}
                                     pointerEvents="none"
                                     size="lg"
                                 />
                                 <Text
                                     textDecoration={todo.completed ? "line-through" : "none"}
-                                    color={todo.completed ? "gray.500" : "black"}
+                                    color={colorMode === "dark" ? "gray.300" : "black"}
                                     fontSize="lg"
                                 >
                                     {todo.text}
@@ -327,11 +283,11 @@ export const TodoList = ({ searchParams, setAllTags, allTags }) => {
                                         variant="subtle"
                                         colorScheme="purple"
                                         borderRadius="md"
-                                        px={4}
-                                        py={1.5}
-                                        height="32px"
+                                        px={1}
+                                        // py={0.5}
+                                        // height="15px"
                                     >
-                                        <TagLabel fontSize="sm" fontWeight="medium">{tag}</TagLabel>
+                                        <TagLabel fontSize="md" fontWeight="medium">{tag}</TagLabel>
                                     </Tag>
                                 ))}
                             </HStack>
@@ -346,7 +302,7 @@ export const TodoList = ({ searchParams, setAllTags, allTags }) => {
                                 <IconButton
                                     aria-label="Delete Todo"
                                     icon={<DeleteIcon />}
-                                    colorScheme="red"
+                                    colorScheme="gray"
                                     onClick={() => deleteTodo(todo._id)}
                                 />
                             </HStack>

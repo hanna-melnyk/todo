@@ -39,7 +39,7 @@ export const SearchBar = ({ onSearch, allTags }) => {
     const [filterMenuOpen, setFilterMenuOpen] = useState(false);
     // const filterMenuRef = useRef();
     const [tagsInFilterMenu, setTagsInFilterMenu] = useState([]);
-    const [showFilters, setShowFilters] = useState(true); // State to show/hide the filter section
+    const [showFilterForm, setShowFilterForm] = useState(false); // State to show/hide the filter section
 
 
     useEffect(() => {
@@ -114,26 +114,37 @@ export const SearchBar = ({ onSearch, allTags }) => {
     };
 
     return (
-        <Box w="100%" p={2} position="relative">
+        <Box w="100%" p={2} position="relative" bg="transparent">
             {/* Title Section with Filter Toggle Button */}
             <HStack justifyContent="space-between">
                 <Text fontSize="2xl" fontWeight="bold">Todos</Text>
                 <IconButton
-                    icon={<FiFilter />}  // Use the filter icon
+                    icon={<FiFilter />}
                     aria-label="Toggle Filters"
-                    onClick={() => setShowFilters(!showFilters)}  // Toggle show/hide filters
-                    variant="ghost"
-                    colorScheme="purple"
+                    onClick={() => setShowFilterForm(!showFilterForm)}
                     size="md"
+                    variant="solid"  // Change variant to solid to apply background color correctly
+                    bg="#611FEA"  // Set the background color to the desired value
+                    _hover={{ bg: "#5316C4" }} // Maintain a consistent hover color
+                    _active={{ bg: "#4a13b3" }} // Define active color
+                    color={"white"}
                 />
             </HStack>
-            {/* Divider Line */}
-            {/*<Divider mb={4} />*/}
+
 
 
             {/* Conditional Rendering of Filter Section */}
-            {showFilters && (
-                <>
+            {showFilterForm && (
+                <Box
+                    p={4}
+                    mt={2}
+                    borderWidth="1px"
+                    borderRadius="md"
+                    borderColor="teal.300"
+                    boxShadow="sm"
+                    bg="gray.50"
+                    mb={4}
+                >
                     {/* Filter Section */}
                     <HStack p={2} spacing={3}>
                         {filters.map((filter, index) => (
@@ -210,7 +221,7 @@ export const SearchBar = ({ onSearch, allTags }) => {
                             </Button>
                         </Box>
                     </HStack>
-                </>
+                </Box>
                 )}
         </Box>
     );

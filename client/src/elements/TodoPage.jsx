@@ -1,8 +1,9 @@
 // client/src/elements/TodoPage.jsx
 import React, { useState, useEffect } from 'react';
-import { Box, Divider, Container, Center } from '@chakra-ui/react';
+import { Box, Divider, Container, Center, useColorMode  } from '@chakra-ui/react';
 import { SearchBar } from './SearchBar.jsx';
 import { TodoList } from './TodoList.jsx';
+import {getTransparentContainerStyle} from "../theme-helper.js";
 
 export const TodoPage = () => {
     const [searchParams, setSearchParams] = useState({});  // State to hold search parameters
@@ -11,6 +12,7 @@ export const TodoPage = () => {
     * it passes down the search criteria to both components (SearchBar for handling user inputs and TodoList for fetching and displaying filtered data).
     * "Top-Down Data Flow": parent component manages the state and passes down data or functions as props.*/
     const [allTags, setAllTags] = useState([]);  // State to hold all tags for shared use
+    const { colorMode } = useColorMode(); // Use `useColorMode` to get the current color mode
 
 /*useEffect for debugging purposes*/
     useEffect(() => {
@@ -33,10 +35,7 @@ export const TodoPage = () => {
                     <Container
                         maxW="container.lg"
                         w="100vw"
-                        p={4}
-                        bg="#EFEFEF" // Semi-transparent background
-                        boxShadow="md"
-                        borderRadius="md"
+                        {...getTransparentContainerStyle(colorMode)}
                     >
                         {/* Pass handleSearch to the SearchBar as onSearch prop */}
                         <SearchBar  onSearch={handleSearch} allTags={allTags} />

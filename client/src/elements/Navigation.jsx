@@ -1,7 +1,7 @@
 // client/src/components/Navigation.jsx
 import React, {useContext, useEffect} from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import {Box, Button, HStack, Link, useColorMode, useColorModeValue, IconButton, Text} from '@chakra-ui/react';
+import {Box, Button, HStack, Link, useColorMode, useColorModeValue, IconButton, Text, Avatar, VStack } from '@chakra-ui/react';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import { LuSparkles } from "react-icons/lu";
 import { useLogin } from '../contexts/LoginContext';
@@ -11,7 +11,7 @@ import { useLogin } from '../contexts/LoginContext';
 const AuthLinks = ({ handleLogout }) => (
     <HStack spacing={4}>
         <Link as={RouterLink} to="/profile">
-            Profile
+            <Text fontSize="2xl" fontWeight="bold">Profile</Text>
         </Link>
         <Button colorScheme="purple" variant="outline" onClick={handleLogout}>
             Logout
@@ -69,7 +69,7 @@ export const Navigation = () => {
                     <Link as={RouterLink} to="/">
                         <HStack spacing={2}>
                             <LuSparkles />
-                            <Text>Home</Text>
+                            <Text fontSize="2xl" fontWeight="bold">Home</Text>
                         </HStack>
                     </Link>
                     {isLoggedIn ? <AuthLinks handleLogout={logout} /> : <GuestLinks />}

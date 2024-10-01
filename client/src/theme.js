@@ -1,6 +1,7 @@
 //client/src/theme.js
 // 1. Import `extendTheme` from Chakra UI
-import { extendTheme } from '@chakra-ui/react';
+import React from 'react';
+import { ChakraProvider, extendTheme, List, ListItem, useColorMode } from '@chakra-ui/react';
 
 // 2. Add color mode configuration
 const config = {
@@ -20,7 +21,18 @@ const styles = {
 };
 
 
+// Custom component styles
+const components = {
+};
+
+
+
+
+
+
+
+
 // 3. Extend the theme with the config
-const theme = extendTheme({ config, styles  });
+const theme = extendTheme({ config, styles, components });
 
 export default theme;
