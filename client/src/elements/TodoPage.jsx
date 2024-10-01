@@ -27,7 +27,7 @@ export const TodoPage = () => {
     return (
         <Box w="100vw" overflowX="hidden">
             {/* SearchBar Container with Full Viewport Width */}
-            <Box w="100vw" bg="gray.50" boxShadow="sm">
+            <Box w="100vw" bg="transparent" boxShadow="sm">
                 {/* Centered SearchBar inside the Container */}
                 <Center>
                     <Container maxW="container.lg" w="100vw" p={4} bg="white" boxShadow="md" borderRadius="md">
@@ -42,7 +42,7 @@ export const TodoPage = () => {
                 maxW="container.lg"
                 w="100vw"
                 my={4}
-                bg="white"
+                bg="transparent"
                 boxShadow="md"
                 borderRadius="md"
             >

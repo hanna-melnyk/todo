@@ -1,0 +1,11 @@
+/*client/src/background.css*/
+/* This class will be applied to the body or main container of your React app */
+.dotted-background {
+    /*r attribute in the SVG circle defines the radius of the dots.*/
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ccircle cx='2.5' cy='2.5' r='1' fill='black' /%3E%3C/svg%3E");
+    background-color: #EFEFEF;
+    background-size: 20px 20px; /* Controls the spacing of the dots */
+    min-height: 100vh; /* Ensures the background covers the entire screen */
+    margin: 0;
+    padding: 0;
+}
