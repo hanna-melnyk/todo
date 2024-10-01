@@ -116,7 +116,7 @@ export const SearchBar = ({ onSearch, allTags }) => {
     return (
         <Box w="100%" p={2} position="relative">
             {/* Title Section with Filter Toggle Button */}
-            <HStack justifyContent="space-between" mb={2}>
+            <HStack justifyContent="space-between">
                 <Text fontSize="2xl" fontWeight="bold">Todos</Text>
                 <IconButton
                     icon={<FiFilter />}  // Use the filter icon
@@ -128,7 +128,7 @@ export const SearchBar = ({ onSearch, allTags }) => {
                 />
             </HStack>
             {/* Divider Line */}
-            <Divider mb={4} />
+            {/*<Divider mb={4} />*/}
 
 
             {/* Conditional Rendering of Filter Section */}

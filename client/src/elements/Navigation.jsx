@@ -1,5 +1,5 @@
 // client/src/components/Navigation.jsx
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {Box, Button, HStack, Link, useColorMode, useColorModeValue, IconButton, Text} from '@chakra-ui/react';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
@@ -48,8 +48,22 @@ export const Navigation = () => {
     //     window.location.reload();
     // };
 
+
+    // Use useEffect to update body class based on color mode
+    useEffect(() => {
+        const body = document.body;
+
+        if (colorMode === 'light') {
+            body.classList.add('light-mode');
+            body.classList.remove('dark-mode');
+        } else {
+            body.classList.add('dark-mode');
+            body.classList.remove('light-mode');
+        }
+    }, [colorMode]); // Re-run effect whenever `colorMode` changes
+
     return (
-        <Box as="nav" bg="transparent" p={4} w="100vw" boxShadow="sm">
+        <Box as="nav" bg="transparent" p={4} w="100vw">
             <HStack spacing={6} justifyContent="space-between" maxW="container.lg" mx="auto">
                 <HStack spacing={6}>
                     <Link as={RouterLink} to="/">

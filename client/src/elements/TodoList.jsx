@@ -212,10 +212,8 @@ export const TodoList = ({ searchParams, setAllTags, allTags }) => {
             mx="auto"
             pt={8}
             px={6}
-            borderWidth="1px"
             borderRadius="lg"
-            bg="white"
-            boxShadow="sm"
+            bg="transparent"
         >
 
             {error === 'Todo text cannot be empty.' && (
@@ -295,7 +293,16 @@ export const TodoList = ({ searchParams, setAllTags, allTags }) => {
             <List>
                 {todos.length > 0 ? (
                     todos.map(todo => (
-                        <ListItem key={todo._id} pb={2} display="flex" justifyContent="space-between" alignItems="center">
+                        <ListItem
+                            key={todo._id}
+                            p={4}
+                            mb={2}
+                            borderRadius="md"
+                            bg="rgba(239, 239, 239, 0.8)" // Semi-transparent background for each todo item
+                            display="flex"
+                            justifyContent="space-between"
+                            alignItems="center"
+                        >
                             <HStack flex="1" spacing={5} onClick={() => toggleTodo(todo)} cursor="pointer">
                                 <Checkbox
                                     isChecked={todo.completed}

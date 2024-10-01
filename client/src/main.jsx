@@ -9,8 +9,10 @@ import { LoginProvider } from './contexts/LoginContext';
 createRoot(document.getElementById('root')).render(
     <>
     {/* <StrictMode> */}
-        <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+        {/* Initialize color mode script */}
+
         <ChakraProvider theme={theme}>
+            <ColorModeScript initialColorMode={theme.config.initialColorMode} />
             <LoginProvider>
                 <App />
             </LoginProvider>

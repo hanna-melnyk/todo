@@ -1,11 +1,24 @@
 /*client/src/background.css*/
 /* This class will be applied to the body or main container of your React app */
-.dotted-background {
-    /*r attribute in the SVG circle defines the radius of the dots.*/
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ccircle cx='2.5' cy='2.5' r='1' fill='black' /%3E%3C/svg%3E");
-    background-color: #EFEFEF;
-    background-size: 20px 20px; /* Controls the spacing of the dots */
-    min-height: 100vh; /* Ensures the background covers the entire screen */
+/*    !*r attribute in the SVG circle defines the radius of the dots.*!*/
+/* client/src/background.css */
+
+/* Base body styling */
+body {
+    min-height: 100vh;
     margin: 0;
     padding: 0;
+    background-size: 20px 20px;
+}
+
+/* Light mode styling */
+.light-mode {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Crect width='20' height='20' fill='%23EFEFEF'/%3E%3Ccircle cx='2.5' cy='2.5' r='1' fill='%23000000' /%3E%3C/svg%3E") !important; /* Black dots (#000000) on light background */
+    background-color: #EFEFEF;
+}
+
+/* Dark mode styling */
+.dark-mode {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Crect width='20' height='20' fill='%23000000'/%3E%3Ccircle cx='2.5' cy='2.5' r='1' fill='%23FFFFFF' /%3E%3C/svg%3E") !important; /* White dots (#FFFFFF) on dark background */
+    background-color: #000000;
 }

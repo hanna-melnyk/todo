@@ -6,17 +6,16 @@ import AppRoutes from './AppRoutes';
 import './background.css';
 
 
-function App() {
 
+function App() {
     /* Use logout function from context */
     return (
 
-        <div className="dotted-background">
+
             <Router>
                 <Navigation/>
                 <AppRoutes />
             </Router>
-        </div>
     );
 }
 

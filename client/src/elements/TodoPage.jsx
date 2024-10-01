@@ -27,28 +27,27 @@ export const TodoPage = () => {
     return (
         <Box w="100vw" overflowX="hidden">
             {/* SearchBar Container with Full Viewport Width */}
-            <Box w="100vw" bg="transparent" boxShadow="sm">
+
                 {/* Centered SearchBar inside the Container */}
                 <Center>
-                    <Container maxW="container.lg" w="100vw" p={4} bg="white" boxShadow="md" borderRadius="md">
+                    <Container
+                        maxW="container.lg"
+                        w="100vw"
+                        p={4}
+                        bg="#EFEFEF" // Semi-transparent background
+                        boxShadow="md"
+                        borderRadius="md"
+                    >
                         {/* Pass handleSearch to the SearchBar as onSearch prop */}
-                        <SearchBar onSearch={handleSearch} allTags={allTags} />
+                        <SearchBar  onSearch={handleSearch} allTags={allTags} />
                     </Container>
                 </Center>
-            </Box>
+
 
             {/* TodoList Section */}
-            <Container
-                maxW="container.lg"
-                w="100vw"
-                my={4}
-                bg="transparent"
-                boxShadow="md"
-                borderRadius="md"
-            >
                 {/* Pass search parameters and setAllTags function */}
                 <TodoList searchParams={searchParams} setAllTags={setAllTags} allTags={allTags} />
-            </Container>
+
         </Box>
     );
 };
