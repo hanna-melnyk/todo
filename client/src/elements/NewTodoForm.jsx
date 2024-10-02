@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {Box, Button, Input, HStack, Tag, TagLabel, useOutsideClick} from '@chakra-ui/react';
+import {Box, Button, Input, HStack, Tag, TagLabel, useOutsideClick, useColorMode} from '@chakra-ui/react';
+import {getTransparentContainerStyle} from "../theme-helper.js";
 
 /**
  * NewTodoForm Component
@@ -14,6 +15,7 @@ export const NewTodoForm = ({ addTodo, onCancel, allTags }) => {
     const [filteredTags, setFilteredTags] = useState([]); // State to hold filtered tag suggestions
     const inputRef = useRef(null);
     const menuRef = useRef(null);
+    const { colorMode } = useColorMode(); // Use `useColorMode` to get the current color mode
 
     useEffect(() => {
         if (inputRef.current) {
@@ -57,10 +59,8 @@ export const NewTodoForm = ({ addTodo, onCancel, allTags }) => {
             p={4}
             borderWidth="1px"
             borderRadius="md"
-            borderColor="teal.300"
-            boxShadow="sm"
-            bg="gray.50"
-            mb={4}
+            mt={2}
+            {...getTransparentContainerStyle(colorMode)}
         >
             {/* Input field for Todo Name */}
             <Input

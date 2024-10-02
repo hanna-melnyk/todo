@@ -14,8 +14,8 @@ import {getTransparentContainerStyle} from "../theme-helper.js";
 
 
 /*TodoList element accepts the searchParams prop from TodoPage*/
-export const TodoList = ({ searchParams, setAllTags, allTags }) => {
-    const [todos, setTodos] = useState([]);
+export const TodoList = ({ todos, setTodos, searchParams, setAllTags, allTags }) => {
+    // const [todos, setTodos] = useState([]);
     // const [todoName, setTodoName] = useState('');
     // const [tags, setTags] = useState('');
     const [editTodo, setEditTodo] = useState(null);
@@ -30,7 +30,7 @@ export const TodoList = ({ searchParams, setAllTags, allTags }) => {
     /*Separate states for "Add Todo" and "Edit Todo"*/
     const [editTodoName, setEditTodoName] = useState('');
     const [editTags, setEditTags] = useState('');
-    const [showTodoForm, setShowTodoForm] = useState(false); // State to show/hide the new todo form
+    // const [showTodoForm, setShowTodoForm] = useState(false); // State to show/hide the new todo form
     const { colorMode } = useColorMode(); // Use `useColorMode` to get the current color mode
 
     const fetchTodos = async (params = {}) => {
@@ -71,35 +71,7 @@ export const TodoList = ({ searchParams, setAllTags, allTags }) => {
         if (isLoggedIn) fetchTodos(searchParams);
     }, [authApi, isLoggedIn, navigate, searchParams]);
 
-    // Add a new todo
-    const addTodo = async (todoName, tags, resetTodoName, resetTags) => {
-        if (!todoName.trim()) {
-            setError('Todo text cannot be empty.'); // Set error if input is empty
-            return;
-        }
 
-        try {
-            // Convert the comma-separated tags string into an array
-            const tagsArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
-            const response = await authApi.post('/todos', { text: todoName, tags: tagsArray });
-            setTodos([...todos, response.data]);
-
-            // Update the `allTags` list in the parent (`TodoPage`) with the new tags
-            const uniqueTags = [...new Set([...allTags, ...tagsArray])];  // Keep the tags in their original case
-            setAllTags(uniqueTags);  // Call the `setAllTags` function from the parent component
-
-            // Reset input fields and hide form
-            // setTodoName('');
-            // setTags('');  // Clear the tags input after adding a todo
-            resetTodoName('');
-            resetTags('');
-            setShowTodoForm(false);
-            setError(''); // Clear error after successful addition
-        } catch (error) {
-            console.error('Error adding todo:', error);
-            setError('Error adding todo');
-        }
-    };
 
     // Toggle todo completion status
     const toggleTodo = async (todo) => {
@@ -198,48 +170,48 @@ export const TodoList = ({ searchParams, setAllTags, allTags }) => {
             bg="transparent"
         >
 
-            {error === 'Todo text cannot be empty.' && (
-                <Alert status="error" mb={4}>
-                    <AlertIcon />
-                    <AlertTitle>Error:</AlertTitle>
-                    <AlertDescription>{error}</AlertDescription>
-                </Alert>
-            )}
+            {/*{error === 'Todo text cannot be empty.' && (*/}
+            {/*    <Alert status="error" mb={4}>*/}
+            {/*        <AlertIcon />*/}
+            {/*        <AlertTitle>Error:</AlertTitle>*/}
+            {/*        <AlertDescription>{error}</AlertDescription>*/}
+            {/*    </Alert>*/}
+            {/*)}*/}
 
-            {/* ButtonGroup for New/Save functionality */}
-            <ButtonGroup size="sm" isAttached mb={4}>
-                <Button
-                    onClick={() => setShowTodoForm(!showTodoForm)}
-                    bg="#611FEA"  // Correct background color
-                    color="white" // Ensure text is white
-                    _hover={{ bg: "#5316C4" }} // Maintain a consistent hover color
-                    _active={{ bg: "#4a13b3" }} // Define active color
-                    border="none" // Remove borders
-                    borderRadius="md"
-                >
-                    {showTodoForm ? 'Cancel' : 'New'}
-                </Button>
-                <IconButton
-                    aria-label={showTodoForm ? 'Close form' : 'Open form'}
-                    icon={showTodoForm ? <CloseIcon /> : <AddIcon />}
-                    onClick={() => setShowTodoForm(!showTodoForm)}
-                    bg="#611FEA"
-                    color="white"
-                    _hover={{ bg: "#5316C4" }}
-                    _active={{ bg: "#4a13b3" }}
-                    border="none" // Remove borders for consistency
-                    borderRadius="md"
-                />
-            </ButtonGroup>
+            {/*/!* ButtonGroup for New/Save functionality *!/*/}
+            {/*<ButtonGroup size="sm" isAttached mb={4}>*/}
+            {/*    <Button*/}
+            {/*        onClick={() => setShowTodoForm(!showTodoForm)}*/}
+            {/*        bg="#611FEA"  // Correct background color*/}
+            {/*        color="white" // Ensure text is white*/}
+            {/*        _hover={{ bg: "#5316C4" }} // Maintain a consistent hover color*/}
+            {/*        _active={{ bg: "#4a13b3" }} // Define active color*/}
+            {/*        border="none" // Remove borders*/}
+            {/*        borderRadius="md"*/}
+            {/*    >*/}
+            {/*        {showTodoForm ? 'Cancel' : 'New'}*/}
+            {/*    </Button>*/}
+            {/*    <IconButton*/}
+            {/*        aria-label={showTodoForm ? 'Close form' : 'Open form'}*/}
+            {/*        icon={showTodoForm ? <CloseIcon /> : <AddIcon />}*/}
+            {/*        onClick={() => setShowTodoForm(!showTodoForm)}*/}
+            {/*        bg="#611FEA"*/}
+            {/*        color="white"*/}
+            {/*        _hover={{ bg: "#5316C4" }}*/}
+            {/*        _active={{ bg: "#4a13b3" }}*/}
+            {/*        border="none" // Remove borders for consistency*/}
+            {/*        borderRadius="md"*/}
+            {/*    />*/}
+            {/*</ButtonGroup>*/}
 
-            {/* Conditional rendering of the NewTodoForm component */}
-            {showTodoForm && (
-                <NewTodoForm
-                    addTodo={addTodo}
-                    onCancel={() => setShowTodoForm(false)}
-                    allTags={allTags} // Pass allTags to the new component
-                />
-            )}
+            {/*/!* Conditional rendering of the NewTodoForm component *!/*/}
+            {/*{showTodoForm && (*/}
+            {/*    <NewTodoForm*/}
+            {/*        addTodo={addTodo}*/}
+            {/*        onCancel={() => setShowTodoForm(false)}*/}
+            {/*        allTags={allTags} // Pass allTags to the new component*/}
+            {/*    />*/}
+            {/*)}*/}
 
 
             {/* Display the list of todos */}
