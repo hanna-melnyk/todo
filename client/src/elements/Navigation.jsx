@@ -5,20 +5,24 @@ import {Box, Button, HStack, Link, useColorMode, IconButton} from '@chakra-ui/re
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import { useLogin } from '../contexts/LoginContext';
 import {SideMenu} from "./SideMenu.jsx";
-
+import {getTransparentContainerStyle} from "../theme-helper.js";
 
 
 // Links for unauthorized users
-const GuestLinks = () => (
-    <HStack spacing={4}>
-        <Link as={RouterLink} to="/login">
-            Login
-        </Link>
-        <Link as={RouterLink} to="/register">
-            Register
-        </Link>
-    </HStack>
-);
+const GuestLinks = () => {
+    const { colorMode } = useColorMode(); // Get color mode for styling
+
+    return (
+        <HStack spacing={4} p={"5"}>
+            <Button as={RouterLink} to="/login" {...getTransparentContainerStyle(colorMode)}>
+                Login
+            </Button>
+            <Button as={RouterLink} to="/register" {...getTransparentContainerStyle(colorMode)}>
+                Register
+            </Button>
+        </HStack>
+    );
+};
 
 
 export const Navigation = () => {

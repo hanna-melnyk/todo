@@ -2,8 +2,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Box, FormControl, FormLabel, Input, Button, Text } from '@chakra-ui/react';
+import { Box, FormControl, FormLabel, Input, Button, Text, useColorMode } from '@chakra-ui/react';
 import { useLogin } from '../contexts/LoginContext';
+import { getTransparentContainerStyle } from '../theme-helper';
 
 export const Login = () => {
     const [email, setEmail] = useState('');
@@ -11,6 +12,7 @@ export const Login = () => {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const { login } = useLogin(); // Use the login function from the context
+    const { colorMode} = useColorMode(); // Get color mode
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -35,7 +37,7 @@ export const Login = () => {
     };
 
     return (
-        <Box maxW="sm" mx="auto" mt={8} p={4} borderWidth="1px" borderRadius="lg">
+        <Box maxW="sm" mx="auto" mt={8} p={4} borderWidth="1px" borderRadius="lg" {...getTransparentContainerStyle(colorMode)} >
             <Text fontSize="2xl" mb={4}>Login</Text>
             {error && <Text color="red.500" mb={4}>{error}</Text>}
             <form onSubmit={handleSubmit}>
