@@ -1,6 +1,10 @@
+/*client/src/App.css*/
 #root {
   margin: 0 16px 0 0;
   text-align: center;
   overflow-x: hidden;
 }
 
+body {
+  overflow-y: scroll; /* Forces the scrollbar to always be visible */
+}

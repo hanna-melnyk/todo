@@ -1,44 +1,42 @@
 //client/src/elements/TodoList.jsx
-import React, { useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import authApi from '../api/axiosTokenInterceptor';
 import {
-    Box, Button, Input, List, ListItem, Text, Checkbox, IconButton, useDisclosure, Modal,
+    Box, Button, ButtonGroup, Input, List, ListItem, Text, Checkbox, IconButton, useDisclosure, Modal,
     ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, HStack, Tag, TagLabel,
-    Alert, AlertIcon, AlertTitle, AlertDescription, useOutsideClick
+    Alert, AlertIcon, AlertTitle, AlertDescription, useOutsideClick, useColorMode
 } from '@chakra-ui/react';
-import { EditIcon, DeleteIcon } from '@chakra-ui/icons';
+import { EditIcon, DeleteIcon, AddIcon, CloseIcon } from '@chakra-ui/icons';
 import { useLogin } from '../contexts/LoginContext';
+import {getTransparentContainerStyle} from "../theme-helper.js";
 
 
 /*TodoList element accepts the searchParams prop from TodoPage*/
-export const TodoList = ({searchParams}) => {
-    const [todos, setTodos] = useState([]);
-    const [newTodo, setNewTodo] = useState('');
-    const [newTags, setNewTags] = useState('');
+export const TodoList = ({ todos, setTodos, searchParams, setAllTags, allTags }) => {
     const [editTodo, setEditTodo] = useState(null);
     const [error, setError] = useState(null);
     const [loadingTodos, setLoadingTodos] = useState(true);
-    const [allTags, setAllTags] = useState([]); // State to hold all existing tags
-    const [filteredTags, setFilteredTags] = useState([]); // Filtered tag suggestions
-    const menuRef = useRef(); // Ref to handle outside click for tag suggestions
-    const inputRef = useRef(); // New input ref for the tag input
     const navigate = useNavigate();
     const { isOpen, onOpen, onClose } = useDisclosure();  // useDisclosure for modal control
-
     const { isLoggedIn, loading } = useLogin(); // Use isLoggedIn and loading from context
-
-
-    // const storedUserInfo = JSON.parse(localStorage.getItem('userInfo'));
-    // const isLoggedIn = !!storedUserInfo && !!storedUserInfo.token; // Check if logged in
-
-
+    /*Separate states for "Add Todo" and "Edit Todo"*/
+    const [editTodoName, setEditTodoName] = useState('');
+    const [editTags, setEditTags] = useState('');
+    const { colorMode } = useColorMode(); // Use `useColorMode` to get the current color mode
 
     const fetchTodos = async (params = {}) => {
         try {
+            /*Developer log to see params*/
+            console.log("Fetching todos with params:", params);
             const response = await authApi.get('/todos', { params: params });
-            setTodos(response.data);
-            setAllTags([...new Set(response.data.flatMap(todo => todo.tags))]); // Extract unique tags
+            const todos = response.data;
+            console.log("Todos received:", todos);  // Log todos received
+            setTodos(todos);
+
+            // Extract unique tags and update the parent `allTags`
+            const uniqueTags = [...new Set(todos.flatMap(todo => todo.tags))];
+            setAllTags(uniqueTags); // Call the `setAllTags` prop passed from `TodoPage`
             setError(null);
         } catch (error) {
             if (error.response && error.response.status === 401) {
@@ -62,31 +60,10 @@ export const TodoList = ({searchParams}) => {
 
     // Fetch todos when the component mounts or when searchParams change
     useEffect(() => {
-
-
         if (isLoggedIn) fetchTodos(searchParams);
     }, [authApi, isLoggedIn, navigate, searchParams]);
 
-    // Add a new todo
-    const addTodo = async () => {
-        if (!newTodo.trim()) {
-            setError('Todo text cannot be empty.'); // Set error if input is empty
-            return;
-        }
 
-        try {
-            // Convert the comma-separated tags string into an array
-            const tagsArray = newTags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
-            const response = await authApi.post('/todos', { text: newTodo, tags: tagsArray });
-            setTodos([...todos, response.data]);
-            setNewTodo('');
-            setNewTags('');  // Clear the tags input after adding a todo
-            setError(''); // Clear error after successful addition
-        } catch (error) {
-            console.error('Error adding todo:', error);
-            setError('Error adding todo');
-        }
-    };
 
     // Toggle todo completion status
     const toggleTodo = async (todo) => {
@@ -113,20 +90,37 @@ export const TodoList = ({searchParams}) => {
 
     // Edit a todo (open modal)
     const handleEdit = (todo) => {
-        setEditTodo(todo);  // Set the todo to be edited
-        setNewTodo(todo.text);  // Set the input to the todo text
-        onOpen();  // Open the modal for editing
+        setEditTodo(todo);
+        setEditTodoName(todo.text);
+        setEditTags(todo.tags.join(', '));
+        onOpen();
     };
+
+    // Function to handle cancel button click in modal
+    const handleCancel = () => {
+        setEditTodo(null);  // Clear the edit state
+        setEditTodoName('');  // Reset the text input field
+        setEditTags('');  // Reset the tags input field
+        onClose();  // Close the modal
+    };
+
+
 
     // Save the edited todo
     const saveTodo = async () => {
         if (editTodo) {
             try {
-                const updatedTodo = { ...editTodo, text: newTodo };
+                const tagsArray = editTags.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+                const updatedTodo = { ...editTodo, text: editTodoName, tags: tagsArray };
                 await authApi.put(`/todos/${editTodo._id}`, updatedTodo);
                 setTodos(todos.map(t => (t._id === editTodo._id ? updatedTodo : t)));
-                setEditTodo(null);  // Clear the edit state
-                setNewTodo('');  // Clear the input field
+
+                // Update allTags with the new and existing tags
+                const uniqueTags = [...new Set([...allTags, ...tagsArray])];
+                setAllTags(uniqueTags);  // Update the global tag list immediately
+                setEditTodo(null);
+                setEditTodoName('');
+                setEditTags('');
                 onClose();  // Close the modal after saving
             } catch (error) {
                 console.error('Error saving todo:', error);
@@ -135,147 +129,63 @@ export const TodoList = ({searchParams}) => {
         }
     };
 
-    // Filter tags based on input and exclude already selected tags
-    useEffect(() => {
-        if (newTags) {
-            const searchValue = newTags.split(',').pop().trim();
-            const selectedTags = newTags.split(',').map(tag => tag.trim()).filter(tag => tag !== ''); // Get existing tags
-            setFilteredTags(
-                allTags
-                    .filter(tag => tag.toLowerCase().includes(searchValue.toLowerCase())) // Match with input
-                    .filter(tag => !selectedTags.includes(tag)) // Exclude selected tags
-            );
-        } else {
-            setFilteredTags([]);
-        }
-    }, [newTags, allTags]);
 
     // Update the input field when a tag is clicked
     const handleTagClick = (tag, event) => {
         event.stopPropagation(); // Prevent click event from propagating
         console.log("Tag Clicked:", tag); // Log the clicked tag
         // Split the current input by commas to handle multiple tags
-        const tagsArray = newTags.split(',').map(tag => tag.trim());
+        const tagsArray = tags.split(',').map(tag => tag.trim());
         console.log("Before Update:", tagsArray); // Log the state before updating
         // Replace the last fragment with the selected tag
         tagsArray[tagsArray.length - 1] = tag;
         // Join the updated tags and add a comma
         const updatedTags = tagsArray.filter(t => t !== '').join(', ') + ', ';
         console.log("After Update:", updatedTags); // Log the updated tags string
-        setNewTags(updatedTags);
+        setTags(updatedTags);
         setFilteredTags([]);
         inputRef.current.focus(); // Keep focus on the input field
     };
 
-    useOutsideClick({
-        ref: menuRef,
-        handler: () => setFilteredTags([]),
-    });
-
-    // // Handle search criteria update from SearchBar component
-    // const handleSearch = (searchParams) => {
-    //     fetchTodos(searchParams);  // Fetch todos based on new search parameters
-    // };
 
     // Conditional rendering based on error, loading, and todos length
     if (loading || loadingTodos) return <p>Loading...</p>; // Show loading state
-    // if (error) return <p>{error}</p>;
+
 
     return (
         <Box
             maxW="container.lg"
-            mx="auto"
-            pt={8}
-            px={6}
-            borderWidth="1px"
             borderRadius="lg"
-            bg="white"
-            boxShadow="sm"
+            bg="transparent"
         >
-            <Text fontSize="2xl" pb={4}>Todo List</Text>
 
-            {error === 'Todo text cannot be empty.' && (
-                <Alert status="error" mb={4}>
-                    <AlertIcon />
-                    <AlertTitle>Error:</AlertTitle>
-                    <AlertDescription>{error}</AlertDescription>
-                </Alert>
-            )}
-
-            <Input
-                type="text"
-                value={newTodo}
-                onChange={(e) => setNewTodo(e.target.value)}
-                placeholder="Add a new todo"
-                pb={2}
-            />
-
-            <Input
-                ref={inputRef} // Attach ref to the input
-                type="text"
-                value={newTags}
-                onChange={(e) => {
-                    console.log("Current New Tags Input:", e.target.value); // Log the input value on change
-                    setNewTags(e.target.value);
-                }}
-                placeholder="Add tags (comma separated)"
-                pb={4}
-            />
-            <Box position="relative">
-                {filteredTags.length > 0 && (
-                    <Box
-                        ref={menuRef} // Attach the ref to the dropdown menu container
-                        maxH="200px"
-                        overflowY="scroll"
-                        position="absolute"
-                        top="100%"
-                        zIndex={1}
-                        boxShadow="md"
-                        bg="white"
-                        border="1px solid #E2E8F0"
-                        width="100%"
-                    >
-                        {filteredTags.map((tag, index) => (
-                            <HStack
-                                key={index}
-                                onClick={(event) => handleTagClick(tag, event)}
-                                _hover={{ cursor: 'pointer' }}
-                                p={1}
-                            >
-                                <Tag
-                                    size="lg"
-                                    variant="subtle"
-                                    colorScheme="purple"
-                                    borderRadius="md"
-                                    px={4}
-                                    py={1.5}
-                                    height="32px"
-                                >
-                                    <TagLabel fontSize="sm" fontWeight="medium">{tag}</TagLabel>
-                                </Tag>
-                            </HStack>
-                        ))}
-                    </Box>
-                )}
-            </Box>
-
-
-            <Button onClick={addTodo} colorScheme="purple" width="full" pb={4}>Add Todo</Button>
-
+            {/* Display the list of todos */}
             <List>
                 {todos.length > 0 ? (
                     todos.map(todo => (
-                        <ListItem key={todo._id} pb={2} display="flex" justifyContent="space-between" alignItems="center">
+                        <ListItem
+                            key={todo._id}
+                            display="flex"
+                            justifyContent="space-between"
+                            alignItems="center"
+                            {...getTransparentContainerStyle(colorMode)} // Pass colorMode to getListItemStyles
+                        >
                             <HStack flex="1" spacing={5} onClick={() => toggleTodo(todo)} cursor="pointer">
                                 <Checkbox
                                     isChecked={todo.completed}
-                                    colorScheme="purple"
+                                    colorScheme="none" // Remove default Chakra color scheme
+                                    borderColor="#5316C4"
+                                    _checked={{
+                                        borderColor: "#5316C4", // When checked, set the border color to match outline color
+                                        bg: "#5316C4", // Set background color when checked
+                                        color: "white", // Color of the checkmark icon (if iconColor is not used)
+                                    }}
                                     pointerEvents="none"
                                     size="lg"
                                 />
                                 <Text
                                     textDecoration={todo.completed ? "line-through" : "none"}
-                                    color={todo.completed ? "gray.500" : "black"}
+                                    color={colorMode === "dark" ? "gray.300" : "black"}
                                     fontSize="lg"
                                 >
                                     {todo.text}
@@ -290,11 +200,11 @@ export const TodoList = ({searchParams}) => {
                                         variant="subtle"
                                         colorScheme="purple"
                                         borderRadius="md"
-                                        px={4}
-                                        py={1.5}
-                                        height="32px"
+                                        px={1}
+                                        // py={0.5}
+                                        // height="15px"
                                     >
-                                        <TagLabel fontSize="sm" fontWeight="medium">{tag}</TagLabel>
+                                        <TagLabel fontSize="md" fontWeight="medium">{tag}</TagLabel>
                                     </Tag>
                                 ))}
                             </HStack>
@@ -309,7 +219,7 @@ export const TodoList = ({searchParams}) => {
                                 <IconButton
                                     aria-label="Delete Todo"
                                     icon={<DeleteIcon />}
-                                    colorScheme="red"
+                                    colorScheme="gray"
                                     onClick={() => deleteTodo(todo._id)}
                                 />
                             </HStack>
@@ -320,22 +230,29 @@ export const TodoList = ({searchParams}) => {
                 )}
             </List>
 
+            {/* Combined Modal for Editing Text and Tags */}
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>Edit Todo</ModalHeader>
                     <ModalBody>
                         <Input
-                            value={newTodo}
-                            onChange={(e) => setNewTodo(e.target.value)}
-                            placeholder="Edit your todo"
+                            value={editTodoName}
+                            onChange={(e) => setEditTodoName(e.target.value)}
+                            placeholder="Edit your todo text"
+                            mb={4}
+                        />
+                        <Input
+                            value={editTags}
+                            onChange={(e) => setEditTags(e.target.value)}
+                            placeholder="Edit tags (comma separated)"
                         />
                     </ModalBody>
                     <ModalFooter>
                         <Button colorScheme="blue" mr={3} onClick={saveTodo}>
                             Save
                         </Button>
-                        <Button onClick={onClose}>Cancel</Button>
+                        <Button onClick={handleCancel}>Cancel</Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>
