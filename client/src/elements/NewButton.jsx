@@ -10,7 +10,7 @@ import { AddIcon, CloseIcon } from '@chakra-ui/icons';
  */
 export const NewButton = ({ showTodoForm, setShowTodoForm }) => {
     return (
-        <ButtonGroup size="sm" isAttached mb={4}>
+        <ButtonGroup size="sm" isAttached>
             <Button
                 onClick={() => setShowTodoForm(!showTodoForm)}
                 bg="#611FEA"

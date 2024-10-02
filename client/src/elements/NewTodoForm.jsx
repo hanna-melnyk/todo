@@ -122,7 +122,6 @@ export const NewTodoForm = ({ addTodo, onCancel, allTags }) => {
 
             {/* Button to save or cancel */}
             <Button
-                colorScheme="teal"
                 mr={2}
                 onClick={() => addTodo(todoName, tags, setTodoName, setTags)} // Pass values to the parent save handler
             >

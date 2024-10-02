@@ -1,6 +1,6 @@
 // client/src/elements/TodoPage.jsx
 import React, { useState, useEffect } from 'react';
-import { Box, Divider, Container, Center, useColorMode, HStack, VStack  } from '@chakra-ui/react';
+import { Box, Divider, Container, Center, useColorMode, HStack, VStack, Flex  } from '@chakra-ui/react';
 import { SearchBar } from './SearchBar.jsx';
 import { TodoList } from './TodoList.jsx';
 import {getTransparentContainerStyle} from "../theme-helper.js";
@@ -69,73 +69,75 @@ export const TodoPage = () => {
     };
 
     return (
-        <Box w="100vw" overflowX="hidden">
+        <Box display="flex">
+            {/* Vertical Stack for all elements */}
+            <VStack maxW="container.lg" mx="auto">
+                {/* Button Container */}
 
-            {/* Button Container */}
-            <Box maxW="container.lg" mx="auto" mb={4}>
-                <HStack justifyContent="space-between" w="100%">
-                    <NewButton showTodoForm={showTodoForm} setShowTodoForm={setShowTodoForm} />
-                    <FilterButton
-                        toggleFilter={() => setShowFilterForm(!showFilterForm)}
-                        showFilterForm={showFilterForm}
-                    />
-                </HStack>
-            </Box>
-
-
-
-            {/* Forms Container */}
-            <Box maxW="container.md" mx="auto" mb={6}>
-                {/* NewTodoForm Container */}
-                {showTodoForm && (
-                    <Box
-                        p={4}
-                        mb={4}
-                        borderWidth="1px"
-                        borderRadius="md"
-                        {...getTransparentContainerStyle(colorMode)}
-                    >
-                        <NewTodoForm
-                            addTodo={addTodo}
-                            onCancel={() => setShowTodoForm(false)}
-                            allTags={allTags}
-                        />
+                {/* Button Container with Flex Component */}
+                <Flex w="100%" justifyContent="space-between" mb={4} alignItems="center">
+                    {/* NewButton with Margin Top Adjustment */}
+                    <Box>
+                        <NewButton showTodoForm={showTodoForm} setShowTodoForm={setShowTodoForm} mt="5px" />
                     </Box>
-                )}
 
-                {/* FilterForm Container */}
-                {showFilterForm && (
-                    <Box
-                        p={4}
-                        mb={4}
-                        borderWidth="1px"
-                        borderRadius="md"
-                        {...getTransparentContainerStyle(colorMode)}
-                    >
-                        <FilterForm
-                            allTags={allTags}
-                            onSearch={handleSearch}
-                            colorMode={colorMode}
-                        />
+                    {/* FilterButton */}
+                    <Box>
+                        <FilterButton toggleFilter={() => setShowFilterForm(!showFilterForm)} showFilterForm={showFilterForm} />
                     </Box>
-                )}
-            </Box>
+                </Flex>
 
-            <HStack justifyContent="space-between" alignItems="center" spacing={4} w="100%">
-                {/* Pass handleSearch to the SearchBar as onSearch prop */}
-                {/*<SearchBar  onSearch={handleSearch} allTags={allTags} />*/}
-                {/* TodoList Section */}
-                {/* Pass search parameters and setAllTags function */}
-                <TodoList
-                    searchParams={searchParams}
-                    setAllTags={setAllTags}
-                    allTags={allTags}
-                    todos={todos}  // Pass todos to TodoList
-                    setTodos={setTodos}  // Pass setTodos to TodoList for updating
-                />
 
-            </HStack>
+                {/* Forms Container (appear below buttons) */}
+                <VStack w="100%">
+                    {/* NewTodoForm Container */}
+                    {showTodoForm && (
+                        <Box
+                            w="100%"
+                            p={4}
+                            borderWidth="1px"
+                            borderRadius="md"
+                            {...getTransparentContainerStyle(colorMode)}
+                        >
+                            <NewTodoForm
+                                addTodo={addTodo}
+                                onCancel={() => setShowTodoForm(false)}
+                                allTags={allTags}
+                            />
+                        </Box>
+                    )}
 
+                    {/* FilterForm Container */}
+                    {showFilterForm && (
+                        <Box
+                            w="100%"
+                            p={4}
+                            borderWidth="1px"
+                            borderRadius="md"
+                            {...getTransparentContainerStyle(colorMode)}
+                        >
+                            <FilterForm
+                                allTags={allTags}
+                                onSearch={handleSearch}
+                                colorMode={colorMode}
+                            />
+                        </Box>
+                    )}
+                </VStack>
+
+                {/* TodoList Container */}
+                <Box w="100%">
+                    <Center>
+                        <TodoList
+                            searchParams={searchParams}
+                            setAllTags={setAllTags}
+                            allTags={allTags}
+                            todos={todos}
+                            setTodos={setTodos}
+                        />
+                    </Center>
+                </Box>
+            </VStack>
         </Box>
     );
 };

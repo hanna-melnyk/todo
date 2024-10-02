@@ -163,9 +163,6 @@ export const TodoList = ({ todos, setTodos, searchParams, setAllTags, allTags })
     return (
         <Box
             maxW="container.lg"
-            mx="auto"
-            pt={8}
-            px={6}
             borderRadius="lg"
             bg="transparent"
         >
