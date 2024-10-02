@@ -1,5 +1,5 @@
 //client/src/elements/TodoList.jsx
-import React, { useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import authApi from '../api/axiosTokenInterceptor';
 import {
@@ -9,28 +9,20 @@ import {
 } from '@chakra-ui/react';
 import { EditIcon, DeleteIcon, AddIcon, CloseIcon } from '@chakra-ui/icons';
 import { useLogin } from '../contexts/LoginContext';
-import {NewTodoForm} from "./NewTodoForm.jsx";
 import {getTransparentContainerStyle} from "../theme-helper.js";
 
 
 /*TodoList element accepts the searchParams prop from TodoPage*/
 export const TodoList = ({ todos, setTodos, searchParams, setAllTags, allTags }) => {
-    // const [todos, setTodos] = useState([]);
-    // const [todoName, setTodoName] = useState('');
-    // const [tags, setTags] = useState('');
     const [editTodo, setEditTodo] = useState(null);
     const [error, setError] = useState(null);
     const [loadingTodos, setLoadingTodos] = useState(true);
-    // const [filteredTags, setFilteredTags] = useState([]); // Filtered tag suggestions
-    // const menuRef = useRef(); // Ref to handle outside click for tag suggestions
-    // const inputRef = useRef(); // New input ref for the tag input
     const navigate = useNavigate();
     const { isOpen, onOpen, onClose } = useDisclosure();  // useDisclosure for modal control
     const { isLoggedIn, loading } = useLogin(); // Use isLoggedIn and loading from context
     /*Separate states for "Add Todo" and "Edit Todo"*/
     const [editTodoName, setEditTodoName] = useState('');
     const [editTags, setEditTags] = useState('');
-    // const [showTodoForm, setShowTodoForm] = useState(false); // State to show/hide the new todo form
     const { colorMode } = useColorMode(); // Use `useColorMode` to get the current color mode
 
     const fetchTodos = async (params = {}) => {
@@ -158,7 +150,7 @@ export const TodoList = ({ todos, setTodos, searchParams, setAllTags, allTags })
 
     // Conditional rendering based on error, loading, and todos length
     if (loading || loadingTodos) return <p>Loading...</p>; // Show loading state
-    // if (error) return <p>{error}</p>;
+
 
     return (
         <Box
@@ -166,50 +158,6 @@ export const TodoList = ({ todos, setTodos, searchParams, setAllTags, allTags })
             borderRadius="lg"
             bg="transparent"
         >
-
-            {/*{error === 'Todo text cannot be empty.' && (*/}
-            {/*    <Alert status="error" mb={4}>*/}
-            {/*        <AlertIcon />*/}
-            {/*        <AlertTitle>Error:</AlertTitle>*/}
-            {/*        <AlertDescription>{error}</AlertDescription>*/}
-            {/*    </Alert>*/}
-            {/*)}*/}
-
-            {/*/!* ButtonGroup for New/Save functionality *!/*/}
-            {/*<ButtonGroup size="sm" isAttached mb={4}>*/}
-            {/*    <Button*/}
-            {/*        onClick={() => setShowTodoForm(!showTodoForm)}*/}
-            {/*        bg="#611FEA"  // Correct background color*/}
-            {/*        color="white" // Ensure text is white*/}
-            {/*        _hover={{ bg: "#5316C4" }} // Maintain a consistent hover color*/}
-            {/*        _active={{ bg: "#4a13b3" }} // Define active color*/}
-            {/*        border="none" // Remove borders*/}
-            {/*        borderRadius="md"*/}
-            {/*    >*/}
-            {/*        {showTodoForm ? 'Cancel' : 'New'}*/}
-            {/*    </Button>*/}
-            {/*    <IconButton*/}
-            {/*        aria-label={showTodoForm ? 'Close form' : 'Open form'}*/}
-            {/*        icon={showTodoForm ? <CloseIcon /> : <AddIcon />}*/}
-            {/*        onClick={() => setShowTodoForm(!showTodoForm)}*/}
-            {/*        bg="#611FEA"*/}
-            {/*        color="white"*/}
-            {/*        _hover={{ bg: "#5316C4" }}*/}
-            {/*        _active={{ bg: "#4a13b3" }}*/}
-            {/*        border="none" // Remove borders for consistency*/}
-            {/*        borderRadius="md"*/}
-            {/*    />*/}
-            {/*</ButtonGroup>*/}
-
-            {/*/!* Conditional rendering of the NewTodoForm component *!/*/}
-            {/*{showTodoForm && (*/}
-            {/*    <NewTodoForm*/}
-            {/*        addTodo={addTodo}*/}
-            {/*        onCancel={() => setShowTodoForm(false)}*/}
-            {/*        allTags={allTags} // Pass allTags to the new component*/}
-            {/*    />*/}
-            {/*)}*/}
-
 
             {/* Display the list of todos */}
             <List>

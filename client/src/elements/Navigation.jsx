@@ -1,23 +1,11 @@
 // client/src/components/Navigation.jsx
 import React, {useContext, useEffect} from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import {Box, Button, HStack, Link, useColorMode, useColorModeValue, IconButton, Text, Avatar, VStack } from '@chakra-ui/react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import {Box, Button, HStack, Link, useColorMode, IconButton} from '@chakra-ui/react';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
-import { LuSparkles } from "react-icons/lu";
 import { useLogin } from '../contexts/LoginContext';
+import {SideMenu} from "./SideMenu.jsx";
 
-// Links for authorized users
-/* Use logout function from context */
-const AuthLinks = ({ handleLogout }) => (
-    <HStack spacing={4}>
-        <Link as={RouterLink} to="/profile">
-            <Text fontSize="2xl" fontWeight="bold">Profile</Text>
-        </Link>
-        <Button colorScheme="purple" variant="outline" onClick={handleLogout}>
-            Logout
-        </Button>
-    </HStack>
-);
 
 
 // Links for unauthorized users
@@ -36,17 +24,15 @@ const GuestLinks = () => (
 export const Navigation = () => {
     const { colorMode, toggleColorMode } = useColorMode(); // Get color mode and toggle function
     const icon = colorMode === 'light' ? <MoonIcon /> : <SunIcon />;
-    // const storedUserInfo = JSON.parse(localStorage.getItem('userInfo'));
-    // const isLoggedIn = !!storedUserInfo && !!storedUserInfo.token; // Determine if logged in based on localStorage
 
     const { isLoggedIn, logout } = useLogin(); // Get isLoggedIn state and logout function from LoginContext
 
     console.log('Is Logged In:', isLoggedIn);
 
-    // const handleLogout = () => {
-    //     localStorage.removeItem('userInfo');
-    //     window.location.reload();
-    // };
+    const handleLogout = () => {
+        logout();
+        navigate('/login'); // Redirect after logout
+    };
 
 
     // Use useEffect to update body class based on color mode
@@ -63,21 +49,16 @@ export const Navigation = () => {
     }, [colorMode]); // Re-run effect whenever `colorMode` changes
 
     return (
-        <Box as="nav" bg="transparent" p={4} w="100vw">
-            <HStack spacing={6} justifyContent="space-between" maxW="container.lg" mx="auto">
-                <HStack spacing={6}>
-                    <Link as={RouterLink} to="/">
-                        <HStack spacing={2}>
-                            <LuSparkles />
-                            <Text fontSize="2xl" fontWeight="bold">Home</Text>
-                        </HStack>
-                    </Link>
-                    {isLoggedIn ? <AuthLinks handleLogout={logout} /> : <GuestLinks />}
+        <Box as="nav" bg="transparent">
+            <HStack justifyContent="space-between">
+                <HStack >
+                    {isLoggedIn ? <SideMenu /> : <GuestLinks />} {/* Show SideMenu if logged in, else GuestLinks */}
                 </HStack>
                 <IconButton
                     aria-label={`Toggle ${colorMode === 'light' ? 'Dark' : 'Light'} Mode`}
                     icon={icon}
                     onClick={toggleColorMode}
+
                 />
             </HStack>
         </Box>

@@ -1,5 +1,5 @@
 // client/src/elements/Register.jsx
-import React, { useState, useContext } from 'react';
+import React, { useState} from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Box, FormControl, FormLabel, Input, Button, Text } from '@chakra-ui/react';

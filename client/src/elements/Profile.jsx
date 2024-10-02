@@ -2,7 +2,20 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import authApi from '../api/axiosTokenInterceptor';
-import { Box, Text, Spinner, Heading, Stack, Alert, AlertIcon } from '@chakra-ui/react';
+import {
+    Box,
+    Text,
+    Spinner,
+    Heading,
+    Stack,
+    Alert,
+    AlertIcon,
+    FormControl,
+    FormLabel,
+    Input,
+    Button,
+    Avatar,
+} from '@chakra-ui/react';
 
 export const Profile = () => {
     const [user, setUser] = useState(null); // State to hold user data

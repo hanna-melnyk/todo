@@ -1,7 +1,6 @@
 // client/src/elements/TodoPage.jsx
 import React, { useState, useEffect } from 'react';
 import { Box, Divider, Container, Center, useColorMode, HStack, VStack, Flex  } from '@chakra-ui/react';
-import { SearchBar } from './SearchBar.jsx';
 import { TodoList } from './TodoList.jsx';
 import {getTransparentContainerStyle} from "../theme-helper.js";
 import {NewButton} from "./NewButton.jsx";

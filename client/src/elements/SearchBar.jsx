@@ -4,20 +4,8 @@ import {
     Box,
     HStack,
     Text,
-    Tag,
-    TagLabel,
-    TagRightIcon,
-    Menu,
-    MenuButton,
-    MenuList,
-    MenuItem,
-    Input,
-    Icon,
     IconButton,
-    Button,
-    Checkbox,
-    VStack,
-    Divider
+    Button
 } from '@chakra-ui/react';
 import { ChevronDownIcon, AddIcon, DeleteIcon, SmallCloseIcon } from '@chakra-ui/icons';
 import { FiFilter } from "react-icons/fi";
