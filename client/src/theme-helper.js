@@ -10,7 +10,7 @@
  */
 
 /**
- * Generates styles for ListItem based on the current color mode.
+ * Generates styles for transparent elements based on the current color mode.
  *
  * @param {string} colorMode - The active color mode ("light" or "dark").
  * @returns {Object} - An object containing style properties for ListItem.
@@ -22,3 +22,27 @@ export const getTransparentContainerStyle = (colorMode) => ({
     borderRadius: "md",
     padding: "8px",
 });
+
+/**
+ * Generates styles for non-transparent elements based on the current color mode.
+ *
+ * @param {string} colorMode - The active color mode ("light" or "dark").
+ * @returns {Object} - An object containing style properties for ListItem.
+ */
+export const getSolidContainerStyle = (colorMode) => {
+    return {
+        bg: colorMode === 'light' ? '#F0F0F0' : '#2C2C2C', // Light gray for light mode, dark gray for dark mode
+        color: colorMode === 'light' ? 'black' : 'white',    // Text color based on background contrast
+        border: `1px solid ${colorMode === 'light' ? '#E2E8F0' : '#4A5568'}`, // Light border for light mode, darker border for dark mode
+        borderRadius: 'md',
+        boxShadow: 'md',
+    };
+};
+
+// New function for menu item hover style
+export const getMenuItemHoverStyle = (colorMode) => {
+    return {
+        bg: colorMode === 'light' ? 'gray.200' : '#3A3A3A', // Slightly lighter gray for dark mode hover, gray.200 for light mode
+        cursor: 'pointer'
+    };
+};

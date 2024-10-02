@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Button, HStack, Text, useColorMode } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 import { FilterTag } from './FilterTag.jsx';
-import {getTransparentContainerStyle} from "../theme-helper.js";
+import {getTransparentContainerStyle, getSolidContainerStyle, getMenuItemHoverStyle} from "../theme-helper.js";
 
 const todoFields = [
     { label: 'Todo Text', type: 'text', databaseName: 'text' },
@@ -108,10 +108,7 @@ export const FilterForm = ({ allTags, onSearch }) => {
                             top="100%"
                             mt={2}
                             zIndex={1}
-                            bg="white"
-                            border="1px solid #E2E8F0"
-                            boxShadow="md"
-                            borderRadius="md"
+                            {...getSolidContainerStyle(colorMode)}
                             width="200px"
                             p={2}
                         >
@@ -119,7 +116,13 @@ export const FilterForm = ({ allTags, onSearch }) => {
                                 Choose filter
                             </Text>
                             {todoFields.map((field, index) => (
-                                <Box key={index} onClick={() => addFilter(field.label)} p={2} cursor="pointer" _hover={{ bg: 'gray.100' }}>
+                                <Box
+                                    key={index}
+                                    onClick={() => addFilter(field.label)}
+                                    p={2}
+                                    cursor="pointer"
+                                    _hover={getMenuItemHoverStyle(colorMode)}
+                                >
                                     {field.label}
                                 </Box>
                             ))}

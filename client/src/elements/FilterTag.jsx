@@ -1,8 +1,9 @@
 //client/src/elements/FilterTag.jsx
 import React, { useState, useRef, useEffect } from 'react';
-import { Box, HStack, Tag, TagLabel, TagRightIcon, Menu, MenuButton, MenuList, MenuItem, Input, IconButton, Text } from '@chakra-ui/react';
+import { Box, HStack, Tag, Text, TagLabel, TagRightIcon, Menu, MenuButton, MenuList, MenuItem, Input, IconButton, useColorMode } from '@chakra-ui/react';
 import { ChevronDownIcon, DeleteIcon } from '@chakra-ui/icons';
 import { GoKebabHorizontal } from 'react-icons/go';
+import {getSolidContainerStyle, getMenuItemHoverStyle} from "../theme-helper.js";
 
 
 /*FilterTag component is used to return custom designs for each field type*/
@@ -12,6 +13,7 @@ export const FilterTag = ({ type, value, name, onValueChange, onDelete, allTags 
     const [filteredTags, setFilteredTags] = useState([]);
     const inputRef = useRef(null);
     const menuRef = useRef(null);
+    const { colorMode } = useColorMode(); // Get the color mode from Chakra UI
 
 
     useEffect(() => {
@@ -93,16 +95,14 @@ export const FilterTag = ({ type, value, name, onValueChange, onDelete, allTags 
                                     position="absolute"
                                     top="100%"
                                     zIndex={1}
-                                    boxShadow="md"
-                                    bg="white"
-                                    border="1px solid #E2E8F0"
                                     width="100%"
+                                    {...getSolidContainerStyle(colorMode)}
                                 >
                                     {filteredTags.map((tag, index) => (
                                         <HStack
                                             key={index}
                                             onClick={(event) => handleTagClick(tag, event)}
-                                            _hover={{ cursor: 'pointer', backgroundColor: 'gray.100' }}
+                                            _hover={getMenuItemHoverStyle(colorMode)}
                                             p={2}
                                         >
                                             <Tag size="lg" variant="subtle" colorScheme="purple" borderRadius="md" px={4} py={1.5}>
@@ -121,11 +121,11 @@ export const FilterTag = ({ type, value, name, onValueChange, onDelete, allTags 
                 return (
                     <Box>
                         {/* Options for Checkbox */}
-                        <Box onClick={() => handleCheckboxSelection('Checked')} p={2} cursor="pointer" _hover={{ bg: 'gray.100' }}>
+                        <Box onClick={() => handleCheckboxSelection('Checked')} p={2} cursor="pointer" _hover={getMenuItemHoverStyle(colorMode)}>
                             <Text>Checked</Text>
                         </Box>
 
-                        <Box onClick={() => handleCheckboxSelection('Unchecked')} p={2} cursor="pointer" _hover={{ bg: 'gray.100' }}>
+                        <Box onClick={() => handleCheckboxSelection('Unchecked')} p={2} cursor="pointer" _hover={getMenuItemHoverStyle(colorMode)}>
                             <Text>Unchecked</Text>
                         </Box>
                     </Box>
@@ -147,10 +147,7 @@ export const FilterTag = ({ type, value, name, onValueChange, onDelete, allTags 
                     top="100%"
                     mt={2}
                     zIndex={1}
-                    bg="white"
-                    border="1px solid #E2E8F0"
-                    boxShadow="md"
-                    borderRadius="md"
+                    {...getSolidContainerStyle(colorMode)}
                     width="250px"
                     p={3}
                 >
