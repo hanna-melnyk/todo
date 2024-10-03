@@ -1,5 +1,5 @@
 // client/src/components/SideMenu.jsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
     Drawer,
@@ -22,6 +22,7 @@ import {
 import { FiSidebar } from 'react-icons/fi'; // Import the single icon
 import { FiHome, FiUser, FiLogOut } from 'react-icons/fi';
 import { useLogin } from '../contexts/LoginContext';
+import authApi from '../api/axiosTokenInterceptor';
 
 export const SideMenu = () => {
     const { isOpen, onOpen, onClose } = useDisclosure(); // Chakra UI hook to manage the Drawer state
@@ -29,14 +30,27 @@ export const SideMenu = () => {
     const navigate = useNavigate(); // Initialize useNavigate hook
     const {colorMode} = useColorMode();
 
-    // Toggle function to open or close the Drawer
-    // const toggleMenu = () => {
-    //     if (isOpen) {
-    //         onClose();
-    //     } else {
-    //         onOpen();
-    //     }
-    // };
+    // State to hold user data including avatar and name
+    const [user, setUser] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        profileImage: '',
+    });
+
+    // Fetch user profile data including the avatar link
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            try {
+                const { data } = await authApi.get('/profile'); // Fetch profile data from backend
+                setUser(data); // Set the user data in state
+            } catch (error) {
+                console.error('Error fetching user profile:', error);
+            }
+        };
+        fetchUserProfile();
+    }, []);
+
 
     // Handle logout and redirect to login page
     const handleLogout = () => {
@@ -44,56 +58,7 @@ export const SideMenu = () => {
         navigate('/login'); // Redirect to login page after logout
     };
 
-    // return (
-    //     <>
-    //         {/* Sidebar Toggle Button with a Single Icon */}
-    //         <IconButton
-    //             icon={<FiSidebar />} // Use FiSidebar for the button icon
-    //             aria-label="Toggle Sidebar"
-    //             onClick={toggleMenu}
-    //             bg={"#611FEA"}
-    //             _hover={{ bg: "#5316C4" }}
-    //             _active={{ bg: "#4a13b3" }}
-    //             color={"white"}
-    //             variant="solid"
-    //         />
 
-    //         {/* Drawer for the Side Menu */}
-    //         <Drawer placement="left" onClose={onClose} isOpen={isOpen} >
-    //             <DrawerOverlay />
-    //             <DrawerContent bg={colorMode === "dark" ? "#000000" : "#EFEFEF"}>
-    //                 <DrawerHeader borderBottomWidth="1px">
-    //                     <VStack>
-    //                         <Avatar name="User Name" />
-    //                         <Text>User Name</Text>
-    //                         <Text color="gray.500" fontSize="sm">
-    //                             user@example.com
-    //                         </Text>
-    //                     </VStack>
-    //                 </DrawerHeader>
-    //                 <DrawerBody>
-    //                     <VStack spacing={4}>
-    //                         <Link as={RouterLink} to="/">
-    //                             <Button w="full" colorScheme="purple" variant="ghost">
-    //                                 Home
-    //                             </Button>
-    //                         </Link>
-    //                         <Link as={RouterLink} to="/profile">
-    //                             <Button w="full" colorScheme="purple" variant="ghost">
-    //                                 Profile
-    //                             </Button>
-    //                         </Link>
-    //                     </VStack>
-    //                 </DrawerBody>
-    //                 <DrawerFooter borderTopWidth="1px">
-    //                     <Button w="full" colorScheme="red" variant="outline" onClick={handleLogout}>
-    //                         Logout
-    //                     </Button>
-    //                 </DrawerFooter>
-    //             </DrawerContent>
-    //         </Drawer>
-    //     </>
-    // );
 
 
     return (
@@ -166,8 +131,13 @@ export const SideMenu = () => {
 
                 {/* Avatar at the bottom of the Sidebar */}
                 <Box as="footer" mb={4} display="flex" flexDirection="column" alignItems="center">
-                    <Avatar name="User Name" size="md" mb={2} />
-                    <Text fontSize="sm">User Name</Text>
+                    <Avatar
+                        name={`${user.firstName} ${user.lastName}`}
+                        size="md"
+                        mb={2}
+                        src={user.profileImage ? `http://localhost:5000/${user.profileImage.replace(/\\/g, '/')}` : ''} // Set avatar image
+                    />
+                    <Text fontSize="sm">{`${user.firstName} ${user.lastName}`}</Text>
                 </Box>
             </Box>
 

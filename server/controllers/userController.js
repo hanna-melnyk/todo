@@ -54,3 +54,51 @@ export const getUserProfile = async (req, res) => {
         res.status(500).json({ message: 'Error fetching profile', error });
     }
 };
+
+
+export const updateUserProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Update fields only if they are different from the current values
+        if (req.body.firstName && req.body.firstName !== user.firstName) {
+            user.firstName = req.body.firstName;
+        }
+        if (req.body.lastName && req.body.lastName !== user.lastName) {
+            user.lastName = req.body.lastName;
+        }
+        if (req.body.email && req.body.email !== user.email) {
+            // Check if the new email already exists in the database
+            const emailExists = await User.findOne({ email: req.body.email });
+            if (emailExists && emailExists._id.toString() !== user._id.toString()) {
+                return res.status(400).json({ message: 'Email already in use' });
+            }
+            user.email = req.body.email;
+        }
+        if (req.body.password) {
+            const isMatch = await bcrypt.compare(req.body.password, user.password);
+            if (!isMatch) {
+                user.password = req.body.password;
+            }
+        }
+        if (req.file && req.file.path !== user.profileImage) {
+            user.profileImage = req.file.path; // Update profile image if a new file is uploaded
+        }
+
+        const updatedUser = await user.save();
+
+        res.json({
+            _id: updatedUser._id,
+            firstName: updatedUser.firstName,
+            lastName: updatedUser.lastName,
+            email: updatedUser.email,
+            profileImage: updatedUser.profileImage,
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating profile', error });
+    }
+};

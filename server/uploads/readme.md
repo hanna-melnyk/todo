@@ -1,0 +1,1 @@
+`uploads` folder is meant to store image files uploaded by user
