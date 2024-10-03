@@ -17,7 +17,7 @@ export const Register = () => {
         e.preventDefault();
         try {
             /* changed path from '/api/register', because useAxiosInterceptor sets /api as a base url*/
-            const response = await axios.post('/register', { username, email, password });
+            const response = await axios.post('/api/register', { username, email, password });
             localStorage.setItem('userInfo', JSON.stringify(response.data));
             setError(null);  // Clear any previous errors
             navigate('/profile');  // Redirect to profile page on success

@@ -14,7 +14,10 @@ function App() {
 
             <Router>
                 <Navigation/>
-                <AppRoutes />
+                {/* Main content with left margin to make space for the sidebar */}
+                <div style={{ marginLeft: '60px', padding: '20px' }}>
+                    <AppRoutes />
+                </div>
             </Router>
     );
 }

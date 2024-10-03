@@ -1,7 +1,7 @@
 // client/src/components/Navigation.jsx
 import React, {useContext, useEffect} from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import {Box, Button, HStack, Link, useColorMode, IconButton} from '@chakra-ui/react';
+import {Box, Button, HStack, VStack, Link, useColorMode, IconButton} from '@chakra-ui/react';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import { useLogin } from '../contexts/LoginContext';
 import {SideMenu} from "./SideMenu.jsx";
@@ -53,18 +53,33 @@ export const Navigation = () => {
     }, [colorMode]); // Re-run effect whenever `colorMode` changes
 
     return (
-        <Box as="nav" bg="transparent">
-            <HStack justifyContent="space-between">
-                <HStack >
+        <Box
+            as="nav"
+            position="fixed"
+            top="0"
+            left="0"
+            height="100vh"
+            width="60px" // Adjust the width as per your preference
+            bg={"#611FEA"} // Sidebar background
+            display="flex"
+            alignItems="center"
+            justifyContent="flex-start"
+            flexDirection="column"
+            boxShadow="lg"
+            zIndex="10"
+        >
+            <VStack justifyContent="space-between">
+                <VStack >
                     {isLoggedIn ? <SideMenu /> : <GuestLinks />} {/* Show SideMenu if logged in, else GuestLinks */}
-                </HStack>
+                </VStack>
                 <IconButton
                     aria-label={`Toggle ${colorMode === 'light' ? 'Dark' : 'Light'} Mode`}
                     icon={icon}
                     onClick={toggleColorMode}
-
+                    bg={"#611FEA"}
+                    _hover={{ bg: "#5316C4" }}
                 />
-            </HStack>
+            </VStack>
         </Box>
     );
 };
