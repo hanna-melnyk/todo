@@ -1,3 +1,4 @@
+//client/src/elements/Profile.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import authApi from '../api/axiosTokenInterceptor';
@@ -15,7 +16,9 @@ import {
     Button,
     Avatar,
     Center,
+    useColorMode
 } from '@chakra-ui/react';
+import {getTransparentContainerStyle} from "../theme-helper.js";
 
 export const Profile = () => {
     // Initialize the state with empty strings to avoid undefined values
@@ -34,11 +37,15 @@ export const Profile = () => {
         password: '', // Initialize password as empty string
     });
 
+    // New state for password confirmation
+    const [passwordConfirm, setPasswordConfirm] = useState('');
+    const [passwordsMatch, setPasswordsMatch] = useState(true);
     const [error, setError] = useState(null);
     const [message, setMessage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { colorMode } = useColorMode();
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -74,6 +81,14 @@ export const Profile = () => {
         setUserEdit({ ...userEdit, [name]: value });
     };
 
+    const handlePasswordConfirmChange = (e) => {
+        const { value } = e.target;
+        setPasswordConfirm(value);
+
+        // Check for password match whenever password confirmation changes
+        setPasswordsMatch(value === userEdit.password);
+    };
+
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         setUserEdit({ ...userEdit, profileImage: file });
@@ -105,7 +120,7 @@ export const Profile = () => {
     };
 
     return (
-        <Box maxW="sm" mx="auto" mt={8} p={4} borderWidth="1px" borderRadius="lg" bg="gray.500" color="gray.100">
+        <Box {...getTransparentContainerStyle(colorMode)} maxW="sm" mx="auto" mt={8} >
             <Heading size="lg" mb={6} color="purple.300">Profile</Heading>
             {error && (
                 <Alert status="error" mb={4}>
@@ -155,6 +170,17 @@ export const Profile = () => {
                         />
                     </FormControl>
                     <FormControl>
+                        <FormLabel>Confirm New Password</FormLabel>
+                        <Input
+                            type="password"
+                            value={passwordConfirm}
+                            onChange={handlePasswordConfirmChange}
+                        />
+                        {!passwordsMatch && (
+                            <Text color="red.500" fontSize="sm">Passwords do not match</Text>
+                        )}
+                    </FormControl>
+                    <FormControl>
                         <FormLabel>Profile Image</FormLabel>
                         <Input type="file" onChange={handleFileChange} />
                     </FormControl>
@@ -165,6 +191,7 @@ export const Profile = () => {
                         colorScheme="purple"
                         onClick={handleSaveProfile}
                         isLoading={loading}
+                        isDisabled={!passwordsMatch} // Disable Save button if passwords do not match
                     >
                         Save
                     </Button>
