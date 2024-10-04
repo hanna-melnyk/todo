@@ -1,5 +1,5 @@
 //client/src/elements/Profile.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import authApi from '../api/axiosTokenInterceptor';
 import {
@@ -19,6 +19,7 @@ import {
     useColorMode
 } from '@chakra-ui/react';
 import {getTransparentContainerStyle} from "../theme-helper.js";
+import { useDropzone } from 'react-dropzone';
 
 export const Profile = () => {
     // Initialize the state with empty strings to avoid undefined values
@@ -89,11 +90,23 @@ export const Profile = () => {
         setPasswordsMatch(value === userEdit.password);
     };
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        setUserEdit({ ...userEdit, profileImage: file });
+    const onDrop = useCallback((acceptedFiles) => {
+        const file = acceptedFiles[0];
+        setUserEdit((prev) => ({ ...prev, profileImage: file }));
         setImagePreview(URL.createObjectURL(file));
-    };
+    }, []);
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop,
+        accept: 'image/*',
+        multiple: false,
+    });
+
+    // const handleFileChange = (e) => {
+    //     const file = e.target.files[0];
+    //     setUserEdit({ ...userEdit, profileImage: file });
+    //     setImagePreview(URL.createObjectURL(file));
+    // };
 
     const handleSaveProfile = async () => {
         setLoading(true);
@@ -180,9 +193,26 @@ export const Profile = () => {
                             <Text color="red.500" fontSize="sm">Passwords do not match</Text>
                         )}
                     </FormControl>
+                    {/* Dropzone Component */}
                     <FormControl>
                         <FormLabel>Profile Image</FormLabel>
-                        <Input type="file" onChange={handleFileChange} />
+                        <Box
+                            {...getRootProps()}
+                            p={4}
+                            border="2px dashed"
+                            borderRadius="md"
+                            textAlign="center"
+                            cursor="pointer"
+                            borderColor="gray.400"
+                            _hover={{ borderColor: 'purple.300' }}
+                        >
+                            <input {...getInputProps()} />
+                            {isDragActive ? (
+                                <Text>Drop the files here ...</Text>
+                            ) : (
+                                <Text>Drag 'n' drop an image here, or click to select a file</Text>
+                            )}
+                        </Box>
                     </FormControl>
                     <Center>
                         <Avatar size="xl" src={imagePreview} />
