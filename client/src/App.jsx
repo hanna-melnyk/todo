@@ -2,6 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Navigation } from './elements/Navigation';
+import { SideMenu} from "./elements/SideMenu.jsx";
 import AppRoutes from './AppRoutes';
 import './background.css';
 
@@ -13,7 +14,7 @@ function App() {
 
 
             <Router>
-                <Navigation/>
+                <SideMenu></SideMenu>
                 {/* Main content with left margin to make space for the sidebar */}
                 <div style={{ marginLeft: '60px', padding: '20px' }}>
                     <AppRoutes />
