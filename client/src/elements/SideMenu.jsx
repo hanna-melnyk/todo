@@ -19,7 +19,7 @@ import {
     Box,
     useColorMode
 } from '@chakra-ui/react';
-import { FiSidebar } from 'react-icons/fi'; // Import the single icon
+import { FiSidebar } from 'react-icons/fi';
 import { FiHome, FiUser, FiLogOut, FiLogIn, FiUserPlus  } from 'react-icons/fi';
 import { useLogin } from '../contexts/LoginContext';
 import authApi from '../api/axiosTokenInterceptor';
@@ -33,12 +33,14 @@ const GuestLinks = () => {
     return (
         <VStack spacing={4} p={"5"}>
             <Tooltip label="Login" placement="right">
+            {/* Login Button should be shown only if the user is not isLoggedIn */}
             <IconButton
                 as={RouterLink}
                 to="/login"
                 icon={<FiLogIn />}
                 aria-label={"Login"} />
             </Tooltip>
+            {/* Register Button should be shown only if the user is not isLoggedIn */}
             <Tooltip label="Register" placement="right">
                 <IconButton
                     as={RouterLink}
@@ -46,12 +48,6 @@ const GuestLinks = () => {
                     icon={<FiUserPlus />}
                     aria-label={"register"} />
             </Tooltip>
-            {/*<Button as={RouterLink} to="/login" {...getTransparentContainerStyle(colorMode)}>*/}
-            {/*    Login*/}
-            {/*</Button>*/}
-            {/*<Button as={RouterLink} to="/register" {...getTransparentContainerStyle(colorMode)}>*/}
-            {/*    Register*/}
-            {/*</Button>*/}
         </VStack>
     );
 };
@@ -64,6 +60,7 @@ const CustomerLinks = ({ handleLogout }) => {
 
     return (
         <VStack spacing={4} p={"5"}>
+            {/* Home Button should be shown only if the user isLoggedIn */}
             <Tooltip label="Home" placement="right">
                 <IconButton
                     as={RouterLink}
@@ -75,6 +72,7 @@ const CustomerLinks = ({ handleLogout }) => {
                     color="white"
                 />
             </Tooltip>
+            {/* Profile Button should be shown only if the user isLoggedIn */}
             <Tooltip label="Profile" placement="right">
                 <IconButton
                     as={RouterLink}
@@ -87,6 +85,8 @@ const CustomerLinks = ({ handleLogout }) => {
                 />
             </Tooltip>
 
+
+            {/* Logout Button should be shown only if the user isLoggedIn */}
             <Tooltip label="Logout" placement="right">
                 <IconButton
                     icon={<FiLogOut />}
@@ -153,7 +153,7 @@ export const SideMenu = () => {
         }
     }, [colorMode]); // Re-run effect whenever `colorMode` changes
 
-
+    const alignmentStyle = { justifyContent: 'center', alignItems: 'center' };
     return (
         <>
             <Box
@@ -173,7 +173,7 @@ export const SideMenu = () => {
             {/* Vertical Navigation Buttons Outside the Drawer */}
             <VStack spacing={4} mt={4}>
                 <Tooltip label="Show menu" placement="right">
-                    {/* Sidebar Toggle Button with a Single Icon */}
+                    {/* Sidebar Toggle Button should be shown only if the user isLoggedIn */}
                     <IconButton
                         icon={<FiSidebar />} // Use FiSidebar for the button icon
                         aria-label="Toggle Sidebar"
@@ -200,6 +200,7 @@ export const SideMenu = () => {
                         mb={2}
                         src={user.profileImage ? `http://localhost:5000/${user.profileImage.replace(/\\/g, '/')}` : ''} // Set avatar image
                     />
+                    {/*Toggle colorMode button Should be always shown*/}
                     <IconButton
                         aria-label={`Toggle ${colorMode === 'light' ? 'Dark' : 'Light'} Mode`}
                         icon={icon}
@@ -215,40 +216,16 @@ export const SideMenu = () => {
             <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
                 <DrawerOverlay />
                 <DrawerContent bg={colorMode === 'dark' ? "#1A202C" : "#ffffff"}>
-                    <DrawerHeader borderBottomWidth="1px">
-                        {/* Header Content */}
-                        <VStack>
-                            <Avatar name="User Name" />
-                            <Text>User Name</Text>
-                            <Text color="gray.500" fontSize="sm">
-                                user@example.com
-                            </Text>
-                        </VStack>
-                    </DrawerHeader>
-
                     <DrawerBody>
-                        {/* Drawer Body Links */}
-                        <VStack spacing={4}>
-                            <Link as={RouterLink} to="/">
-                                <Button w="full" colorScheme="purple" variant="ghost">
-                                    Home
-                                </Button>
-                            </Link>
-                            <Link as={RouterLink} to="/profile">
-                                <Button w="full" colorScheme="purple" variant="ghost">
-                                    Profile
-                                </Button>
-                            </Link>
-                        </VStack>
-                    </DrawerBody>
 
+                    </DrawerBody>
                     <DrawerFooter borderTopWidth="1px">
-                        <Button w="full" colorScheme="red" variant="outline" onClick={handleLogout}>
-                            Logout
-                        </Button>
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>
         </>
     );
+
+
+
 };
