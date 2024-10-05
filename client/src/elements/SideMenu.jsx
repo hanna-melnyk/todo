@@ -24,6 +24,8 @@ import { FiHome, FiUser, FiLogOut, FiLogIn, FiUserPlus  } from 'react-icons/fi';
 import { useLogin } from '../contexts/LoginContext';
 import authApi from '../api/axiosTokenInterceptor';
 import {MoonIcon, SunIcon} from "@chakra-ui/icons";
+import {ToggleColorModeButton} from "./ToggleColorModeButton.jsx";
+import {SideMenuButton} from "./SideMenuButton.jsx";
 
 
 // Links for unauthorized users
@@ -54,49 +56,34 @@ const GuestLinks = () => {
 
 
 // Links for authorized users
-const CustomerLinks = ({ handleLogout }) => {
+const CustomerLinks = ({ buttonVariant = "icon", handleLogout }) => {
     console.log("CustomerLinks received handleLogout:", handleLogout);
     const { colorMode } = useColorMode(); // Get color mode for styling
 
     return (
-        <VStack spacing={4} p={"5"}>
+        <VStack spacing={4} my={4}>
             {/* Home Button should be shown only if the user isLoggedIn */}
-            <Tooltip label="Home" placement="right">
-                <IconButton
-                    as={RouterLink}
-                    to="/"
-                    icon={<FiHome />}
-                    aria-label="Home"
-                    bg={"#611FEA"}
-                    _hover={{ bg: "#5316C4" }}
-                    color="white"
-                />
-            </Tooltip>
+
+            <SideMenuButton
+                to="/"
+                icon={<FiHome />}
+                text="Home"
+                buttonVariant={buttonVariant} // Pass buttonVariant to children
+            />
             {/* Profile Button should be shown only if the user isLoggedIn */}
-            <Tooltip label="Profile" placement="right">
-                <IconButton
-                    as={RouterLink}
-                    to="/profile"
-                    icon={<FiUser />}
-                    aria-label="Profile"
-                    bg={"#611FEA"}
-                    _hover={{ bg: "#5316C4" }}
-                    color="white"
-                />
-            </Tooltip>
+            <SideMenuButton
+                to="/profile"
+                icon={<FiUser />}
+                text="Profile"
+                buttonVariant={buttonVariant} // Pass buttonVariant to children
+            />
 
-
-            {/* Logout Button should be shown only if the user isLoggedIn */}
-            <Tooltip label="Logout" placement="right">
-                <IconButton
-                    icon={<FiLogOut />}
-                    aria-label="Logout"
-                    onClick={handleLogout}
-                    bg={colorMode === 'light' ? '#D9534F' : '#C53030'}
-                    color="white"
-                    _hover={{ bg: colorMode === 'light' ? '#C9302C' : '#9B2C2C' }}
-                />
-            </Tooltip>
+            <SideMenuButton
+                onClick={handleLogout}
+                icon={<FiLogOut />}
+                text="Logout"
+                buttonVariant={buttonVariant} // Pass buttonVariant to children
+            />
         </VStack>
     );
 };
@@ -171,7 +158,7 @@ export const SideMenu = () => {
                 py={4}
             >
             {/* Vertical Navigation Buttons Outside the Drawer */}
-            <VStack spacing={4} mt={4}>
+            <VStack spacing={4}>
                 <Tooltip label="Show menu" placement="right">
                     {/* Sidebar Toggle Button should be shown only if the user isLoggedIn */}
                     <IconButton
@@ -200,14 +187,7 @@ export const SideMenu = () => {
                         mb={2}
                         src={user.profileImage ? `http://localhost:5000/${user.profileImage.replace(/\\/g, '/')}` : ''} // Set avatar image
                     />
-                    {/*Toggle colorMode button Should be always shown*/}
-                    <IconButton
-                        aria-label={`Toggle ${colorMode === 'light' ? 'Dark' : 'Light'} Mode`}
-                        icon={icon}
-                        onClick={toggleColorMode}
-                        bg={"#611FEA"}
-                        _hover={{ bg: "#5316C4" }}
-                    />
+                    <ToggleColorModeButton/>
                 </Box>
             </Box>
 
@@ -217,9 +197,29 @@ export const SideMenu = () => {
                 <DrawerOverlay />
                 <DrawerContent bg={colorMode === 'dark' ? "#1A202C" : "#ffffff"}>
                     <DrawerBody>
-
+                        <IconButton
+                            my={4}
+                            icon={<FiSidebar />} // Use FiSidebar for the button icon
+                            aria-label="Toggle Sidebar"
+                            onClick={onClose}
+                            bg={"#611FEA"}
+                            _hover={{ bg: "#5316C4" }}
+                            _active={{ bg: "#4a13b3" }}
+                            color={"white"}
+                            variant="solid"
+                        />
+                        {isLoggedIn ? <CustomerLinks buttonVariant={"wide"} handleLogout={handleLogout} /> : <GuestLinks />}
                     </DrawerBody>
-                    <DrawerFooter borderTopWidth="1px">
+                    <DrawerFooter>
+                        <VStack>
+                        <Avatar
+                            name={`${user.firstName} ${user.lastName}`}
+                            size="md"
+                            mb={2}
+                            src={user.profileImage ? `http://localhost:5000/${user.profileImage.replace(/\\/g, '/')}` : ''} // Set avatar image
+                        />
+                            <ToggleColorModeButton buttonVariant={"wide"}/>
+                        </VStack>
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>
