@@ -1,8 +1,5 @@
 // client/src/utils/sidebarData.jsx
 import { FiHome, FiUser, FiLogOut, FiLogIn, FiUserPlus  } from 'react-icons/fi';
-import {ToggleColorModeButton} from "../elements/ToggleColorModeButton.jsx";
-import {ToggleMenuButton} from "../elements/ToggleMenuButton.jsx";
-import {UserAvatar} from "../elements/UserAvatar.jsx";
 
 export const sidebarData = [
     {
@@ -44,23 +41,5 @@ export const sidebarData = [
         showWhenLoggedOut: true,
         group: 'body',
         position: 5,
-    },
-    {
-        component: UserAvatar, // Pass component reference instead of JSX
-        showWhenLoggedOut: false,
-        group: 'footer',
-        position: 1,
-    },
-    {
-        component: ToggleColorModeButton, // Pass component reference
-        showWhenLoggedOut: true,
-        group: 'footer',
-        position: 2,
-    },
-    {
-        component: ToggleMenuButton, // Pass component reference
-        showWhenLoggedOut: true,
-        group: 'header',
-        position: 1,
-    },
+    }
 ];

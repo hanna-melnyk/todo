@@ -5,7 +5,7 @@ import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 
 export const ToggleColorModeButton = ({ buttonVariant = "icon" }) => {
     const { colorMode, toggleColorMode } = useColorMode();
-    const activeBg = useColorModeValue("#611FEA", "#1A202C"); // Active background color
+    const activeBg = useColorModeValue("#b6bbc1", "#1A202C"); // Active background color
     const inactiveBg = useColorModeValue("#E2E8F0", "#2D3748"); // Inactive background color
 
 
@@ -19,7 +19,7 @@ export const ToggleColorModeButton = ({ buttonVariant = "icon" }) => {
                     aria-label={label}
                     icon={icon}
                     onClick={toggleColorMode}
-                    bg={activeBg}
+                    bg={"transparent"}
                     color="white"
                     _hover={{ bg: "#5316C4" }}
                 />
