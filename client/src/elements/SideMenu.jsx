@@ -23,7 +23,7 @@ import authApi from '../api/axiosTokenInterceptor';
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { ToggleColorModeButton } from "./ToggleColorModeButton";
 import { GuestLinks, CustomerLinks } from './SideMenuLinks'; // Import from SideMenuLinks
-
+import {useColorModeSync} from "../hooks/useColorModeSync.js";
 
 /**
  * @function SideMenu
@@ -32,10 +32,10 @@ import { GuestLinks, CustomerLinks } from './SideMenuLinks'; // Import from Side
  * @returns {JSX.Element} The sidebar component with navigation links and profile information.
  */
 export const SideMenu = () => {
-    const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isLoggedIn, logout } = useLogin();
     const navigate = useNavigate();
+    const colorMode = useColorModeSync(); // Get colorMode from custom hook
 
     const [user, setUser] = useState({
         firstName: '',
@@ -63,17 +63,6 @@ export const SideMenu = () => {
         navigate('/login');
     };
 
-    // Update body class based on color mode
-    useEffect(() => {
-        const body = document.body;
-        if (colorMode === 'light') {
-            body.classList.add('light-mode');
-            body.classList.remove('dark-mode');
-        } else {
-            body.classList.add('dark-mode');
-            body.classList.remove('light-mode');
-        }
-    }, [colorMode]);
 
     return (
         <>
