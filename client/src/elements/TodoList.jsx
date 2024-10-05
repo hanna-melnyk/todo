@@ -10,6 +10,7 @@ import {
 import { EditIcon, DeleteIcon, AddIcon, CloseIcon } from '@chakra-ui/icons';
 import { useLogin } from '../contexts/LoginContext';
 import {getTransparentContainerStyle} from "../theme-helper.js";
+import {fetchTodosRequest, updateTodoRequest, deleteTodoRequest, toggleTodoRequest } from "../api/requestService.js";
 
 
 /*TodoList element accepts the searchParams prop from TodoPage*/
@@ -29,7 +30,7 @@ export const TodoList = ({ todos, setTodos, searchParams, setAllTags, allTags })
         try {
             /*Developer log to see params*/
             console.log("Fetching todos with params:", params);
-            const response = await authApi.get('/todos', { params: params });
+            const response = await fetchTodosRequest(params);
             const todos = response.data;
             console.log("Todos received:", todos);  // Log todos received
             setTodos(todos);
@@ -68,9 +69,9 @@ export const TodoList = ({ todos, setTodos, searchParams, setAllTags, allTags })
     // Toggle todo completion status
     const toggleTodo = async (todo) => {
         try {
-            const updatedTodo = { ...todo, completed: !todo.completed };
-            await authApi.put(`/todos/${todo._id}`, updatedTodo);
-            setTodos(todos.map(t => (t._id === todo._id ? updatedTodo : t)));
+            const updatedCompletedStatus = !todo.completed;
+            await toggleTodoRequest(todo._id, updatedCompletedStatus); // Only update the `completed` field
+            setTodos(todos.map(t => (t._id === todo._id ? { ...t, completed: updatedCompletedStatus } : t)));
         } catch (error) {
             console.error('Error toggling todo:', error);
             setError('Error updating todo');
@@ -78,9 +79,9 @@ export const TodoList = ({ todos, setTodos, searchParams, setAllTags, allTags })
     };
 
     // Delete a todo
-    const deleteTodo = async (id) => {
+    const handleDelete = async (id) => {
         try {
-            await authApi.delete(`/todos/${id}`);
+            await deleteTodoRequest(id);
             setTodos(todos.filter(todo => todo._id !== id));
         } catch (error) {
             console.error('Error deleting todo:', error);
@@ -220,7 +221,7 @@ export const TodoList = ({ todos, setTodos, searchParams, setAllTags, allTags })
                                     aria-label="Delete Todo"
                                     icon={<DeleteIcon />}
                                     colorScheme="gray"
-                                    onClick={() => deleteTodo(todo._id)}
+                                    onClick={() => handleDelete(todo._id)}
                                 />
                             </HStack>
                         </ListItem>

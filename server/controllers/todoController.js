@@ -84,6 +84,27 @@ export const getAllTodos = async (req, res) => {
     }
 };
 
+// Toggle completion status of a specific todo
+export const toggleTodoCompletion = async (req, res) => {
+    const { completed } = req.body;  // Expect the `completed` field in the request body
+    try {
+        // Use `$set` to update only the `completed` field
+        const updatedTodo = await Todo.findByIdAndUpdate(
+            req.params.id,
+            { $set: { completed } },  // Only update the `completed` field
+            { new: true }
+        );
+
+        if (!updatedTodo) {
+            return res.status(404).json({ message: 'Todo not found' });
+        }
+
+        res.json(updatedTodo);
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating todo completion status', error });
+    }
+};
+
 
 
 
