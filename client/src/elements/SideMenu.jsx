@@ -22,57 +22,8 @@ import { useLogin } from '../contexts/LoginContext';
 import authApi from '../api/axiosTokenInterceptor';
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { ToggleColorModeButton } from "./ToggleColorModeButton";
-import { SideMenuButton } from "./SideMenuButton";
+import { GuestLinks, CustomerLinks } from './SideMenuLinks'; // Import from SideMenuLinks
 
-/**
- * @function GuestLinks
- * Renders a set of navigation links for guest users (unauthorized users).
- * @returns {JSX.Element} A set of buttons for login and registration.
- */
-const GuestLinks = () => {
-    const { colorMode } = useColorMode();
-
-    return (
-        <VStack spacing={4} p={5}>
-            <Tooltip label="Login" placement="right">
-                <IconButton
-                    as={RouterLink}
-                    to="/login"
-                    icon={<FiLogIn />}
-                    aria-label="Login"
-                />
-            </Tooltip>
-            <Tooltip label="Register" placement="right">
-                <IconButton
-                    as={RouterLink}
-                    to="/register"
-                    icon={<FiUserPlus />}
-                    aria-label="Register"
-                />
-            </Tooltip>
-        </VStack>
-    );
-};
-
-/**
- * @function CustomerLinks
- * Renders a set of navigation links for logged-in (authorized) users.
- * @param {Object} props - Component properties.
- * @param {string} [props.buttonVariant="icon"] - Variant style for the button.
- * @param {Function} props.handleLogout - Function to handle the logout process.
- * @returns {JSX.Element} A set of buttons for navigating home, profile, and logout.
- */
-const CustomerLinks = ({ buttonVariant = "icon", handleLogout }) => {
-    const { colorMode } = useColorMode();
-
-    return (
-        <VStack spacing={4} my={4}>
-            <SideMenuButton to="/" icon={<FiHome />} text="Home" buttonVariant={buttonVariant} />
-            <SideMenuButton to="/profile" icon={<FiUser />} text="Profile" buttonVariant={buttonVariant} />
-            <SideMenuButton onClick={handleLogout} icon={<FiLogOut />} text="Logout" buttonVariant={buttonVariant} />
-        </VStack>
-    );
-};
 
 /**
  * @function SideMenu
