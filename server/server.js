@@ -33,16 +33,6 @@ const __dirname = path.dirname(__filename);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
-app.get('/check-image/:imageName', (req, res) => {
-    const imagePath = path.join(__dirname, 'uploads', req.params.imageName);
-    if (fs.existsSync(imagePath)) {
-        res.send(`Image ${req.params.imageName} exists!`);
-    } else {
-        res.status(404).send('Image not found');
-    }
-});
-
-
 // Serve React frontend in production
 if (process.env.NODE_ENV === 'production') {
     // Serve the static files from the frontend's `dist` folder
