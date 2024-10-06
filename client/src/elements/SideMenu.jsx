@@ -24,6 +24,7 @@ import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { ToggleColorModeButton } from "./ToggleColorModeButton";
 import { GuestLinks, CustomerLinks } from './SideMenuLinks'; // Import from SideMenuLinks
 import {useColorModeSync} from "../hooks/useColorModeSync.js";
+import {UserAvatar} from "./UserAvatar.jsx";
 
 /**
  * @function SideMenu
@@ -99,12 +100,13 @@ export const SideMenu = () => {
 
                 {/* User Avatar and Color Toggle Button */}
                 <Box as="footer" mb={4} display="flex" flexDirection="column" alignItems="center">
-                    <Avatar
-                        name={`${user.firstName} ${user.lastName}`}
-                        size="md"
+                    <UserAvatar
                         mb={2}
+                        isShown={isLoggedIn}
+                        name={`${user.firstName} ${user.lastName}`}
                         src={user.profileImage ? `http://localhost:5000/${user.profileImage.replace(/\\/g, '/')}` : ''}
                     />
+
                     <ToggleColorModeButton />
                 </Box>
             </Box>
@@ -137,10 +139,10 @@ export const SideMenu = () => {
                     </DrawerBody>
                     <DrawerFooter display="flex" justifyContent="center">
                         <VStack>
-                            <Avatar
-                                name={`${user.firstName} ${user.lastName}`}
-                                size="md"
+                            <UserAvatar
                                 mb={2}
+                                isShown={isLoggedIn}
+                                name={`${user.firstName} ${user.lastName}`}
                                 src={user.profileImage ? `http://localhost:5000/${user.profileImage.replace(/\\/g, '/')}` : ''}
                             />
                             <ToggleColorModeButton buttonVariant="wide" />
