@@ -1,4 +1,4 @@
-//server.js
+//server/server.js
 
 import express from 'express';
 import cors from 'cors';
@@ -34,11 +34,11 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Serve React frontend in production
 if (process.env.NODE_ENV === 'production') {
     // Serve the static files from the frontend's `dist` folder
-    app.use(express.static(path.join(__dirname, 'client/dist')));
+    app.use(express.static(path.join(__dirname, '../client/dist')));
 
     // Handle any other requests by serving the frontend's index.html file
     app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
+        res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
     });
 }
 
