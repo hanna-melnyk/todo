@@ -14,16 +14,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-console.log(`Loading all env variables before dtb connection:`);
-console.log('All Environment Variables:', process.env);
 
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('MongoDB connection error:', err));
 
-console.log(`Logging the .env after trying to connect`)
-console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('Logging the NODE_ENV:', process.env.NODE_ENV);
 
 // Use routes:
 app.use('/api', todoRoutes);
@@ -55,5 +52,9 @@ app.get('/', (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`Server running http://localhost:${PORT}`);
+    if (process.env.NODE_ENV !== 'production') {
+        console.log(`Server running at http://localhost:${PORT}`);
+    } else {
+        console.log(`Server running in production mode on port ${PORT}`);
+    }
 });
