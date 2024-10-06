@@ -3,6 +3,7 @@
 /*    !*r attribute in the SVG circle defines the radius of the dots.*!*/
 /* client/src/background.css */
 
+
 /* Base body styling */
 body {
     min-height: 100vh;
@@ -13,12 +14,12 @@ body {
 
 /* Light mode styling */
 .light-mode {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Crect width='20' height='20' fill='%23EFEFEF'/%3E%3Ccircle cx='2.5' cy='2.5' r='1' fill='%23666666' /%3E%3C/svg%3E") !important; /* Gray dots (#000000) on light background */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Crect width='20' height='20' fill='%23EFEFEF'/%3E%3Ccircle cx='2.5' cy='2.5' r='1' fill='%23666666' /%3E%3C/svg%3E") !important; /* Gray dots (#666666) on light background */
     background-color: #EFEFEF;
 }
 
 /* Dark mode styling */
 .dark-mode {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Crect width='20' height='20' fill='%23000000'/%3E%3Ccircle cx='2.5' cy='2.5' r='1' fill='%23666666' /%3E%3C/svg%3E") !important; /* Gray dots (#FFFFFF) on dark background */
-    background-color: #000000;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Crect width='20' height='20' fill='%23141414'/%3E%3Ccircle cx='2.5' cy='2.5' r='1' fill='%23888888' /%3E%3C/svg%3E") !important; /* Lighter gray dots (#888888) on a slightly lighter dark background */
+    background-color: #141414;
 }
