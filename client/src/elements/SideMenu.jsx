@@ -38,7 +38,7 @@ export const SideMenu = () => {
     const navigate = useNavigate();
     const colorMode = useColorModeSync(); // Get colorMode from custom hook
     const [loading, setLoading] = useState(true);
-
+    const [imagePath, setImagePath] = useState(''); //avatar url setter
     const [user, setUser] = useState({
         firstName: '',
         lastName: '',
@@ -65,9 +65,9 @@ export const SideMenu = () => {
     // Dynamically construct image path based on environment
     const baseURL = process.env.NODE_ENV === 'production'
         ? ''  // Use relative path in production
-        : process.env.DEV_BASE_URL;  // Use absolute URL in development
+        : 'http://localhost:5000';  // Use absolute URL in development
 
-    const [imagePath, setImagePath] = useState('');
+
 
     // UseEffect to update and log image path when user.profileImage changes
     useEffect(() => {
