@@ -7,12 +7,8 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        // Use different targets based on the environment
-        target: process.env.NODE_ENV === 'production'
-            ? process.env.WEB_SERVICE_URL // Production URL from .env
-            : process.env.DEVELOPMENT_SERVICE_URL, // Local development URL
-        changeOrigin: true,
-        secure: process.env.NODE_ENV === 'production', // Use secure proxy for production
+        target: 'http://localhost:5000', // Forward API requests to backend
+        changeOrigin: true
       },
     },
     watch: {
