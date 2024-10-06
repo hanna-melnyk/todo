@@ -36,9 +36,11 @@ if (process.env.NODE_ENV === 'production') {
     // Serve the static files from the frontend's `dist` folder
     app.use(express.static(path.join(__dirname, '../client/dist')));
 
-    // Handle any other requests by serving the frontend's index.html file
+    // Handle any other requests that don't match API routes by serving the frontend's index.html file
     app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
+        if (!req.path.startsWith('/api')) {
+            res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
+        }
     });
 }
 
