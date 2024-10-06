@@ -1,5 +1,4 @@
 //server/server.js
-
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
@@ -15,6 +14,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+console.log(`Loading all env variables before dtb connection:`);
+console.log('All Environment Variables:', process.env);
 
 
 mongoose.connect(process.env.MONGO_URI)
