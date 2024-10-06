@@ -37,6 +37,7 @@ export const SideMenu = () => {
     const { isLoggedIn, logout } = useLogin();
     const navigate = useNavigate();
     const colorMode = useColorModeSync(); // Get colorMode from custom hook
+    const [loading, setLoading] = useState(true);
 
     const [user, setUser] = useState({
         firstName: '',
@@ -53,10 +54,35 @@ export const SideMenu = () => {
                 setUser(data);
             } catch (error) {
                 console.error('Error fetching user profile:', error);
+            } finally {
+                setLoading(false);  // Set loading to false once data is fetched
             }
         };
         fetchUserProfile();
     }, []);
+
+
+    // Dynamically construct image path based on environment
+    const baseURL = process.env.NODE_ENV === 'production'
+        ? ''  // Use relative path in production
+        : 'http://localhost:5000';  // Use absolute URL in development
+
+    const [imagePath, setImagePath] = useState('');
+
+    // UseEffect to update and log image path when user.profileImage changes
+    useEffect(() => {
+        if (user.profileImage) {
+            // If profileImage already starts with 'uploads/', do not add '/uploads/' again
+            const profileImagePath = user.profileImage.startsWith('uploads')
+                ? user.profileImage  // Use as-is if it already includes 'uploads'
+                : `uploads/${user.profileImage}`;  // Add 'uploads' if missing
+
+            const constructedPath = `${baseURL}/${profileImagePath.replace(/\\/g, '/')}`;
+            setImagePath(constructedPath);
+            console.log("Constructed image path:", constructedPath);  // Log the constructed path for debugging
+        }
+    }, [user.profileImage, baseURL]);
+
 
     // Handle user logout and redirect to login page
     const handleLogout = async () => {
@@ -104,7 +130,7 @@ export const SideMenu = () => {
                         mb={2}
                         isShown={isLoggedIn}
                         name={`${user.firstName} ${user.lastName}`}
-                        src={user.profileImage ? `http://localhost:5000/${user.profileImage.replace(/\\/g, '/')}` : ''}
+                        src={imagePath}
                     />
 
                     <ToggleColorModeButton />
@@ -143,7 +169,7 @@ export const SideMenu = () => {
                                 mb={2}
                                 isShown={isLoggedIn}
                                 name={`${user.firstName} ${user.lastName}`}
-                                src={user.profileImage ? `http://localhost:5000/${user.profileImage.replace(/\\/g, '/')}` : ''}
+                                src={imagePath}
                             />
                             <ToggleColorModeButton buttonVariant="wide" />
                         </VStack>
