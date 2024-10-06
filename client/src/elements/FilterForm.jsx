@@ -90,10 +90,9 @@ export const FilterForm = ({ allTags, onSearch }) => {
                     <Button
                         onClick={() => setFilterMenuOpen(!filterMenuOpen)}
                         leftIcon={<AddIcon />}
-                        variant="ghost"
-                        color="gray.600"
+                        colorScheme="gray"
                         borderRadius="md"
-                        _hover={{ bg: 'gray.100' }}
+
                         size="sm"
                         px={4}
                         py={2}
