@@ -65,7 +65,7 @@ export const SideMenu = () => {
     // Dynamically construct image path based on environment
     const baseURL = process.env.NODE_ENV === 'production'
         ? ''  // Use relative path in production
-        : 'http://localhost:5000';  // Use absolute URL in development
+        : process.env.DEV_BASE_URL;  // Use absolute URL in development
 
     const [imagePath, setImagePath] = useState('');
 
