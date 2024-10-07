@@ -14,7 +14,6 @@ authApi.interceptors.request.use(
 
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`; // Attach token if it exists
-            console.log(`[TokenInterceptor] - Token attached to request: '${token}' in component: 'Axios Instance', function: 'authApi.interceptors.request.use'`);
         } else {
             console.warn(`[TokenInterceptor] - No valid token found for request in component: 'Axios Instance', function: 'authApi.interceptors.request.use'`);
         }
