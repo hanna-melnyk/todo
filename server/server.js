@@ -21,8 +21,6 @@ mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('MongoDB connection error:', err));
 
-console.log('Logging the NODE_ENV:', process.env.NODE_ENV);
-
 // Use routes:
 app.use('/api', todoRoutes);
 app.use('/api', userRoutes);

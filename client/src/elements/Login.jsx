@@ -16,14 +16,12 @@ export const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(`[LoginComponent] - Login form submitted with email: ${email} in component: 'Login', function: 'handleSubmit'`);
 
         try {
             const response = await axios.post('/api/login', { email, password });
 
             // Store the new token and user info in localStorage
             localStorage.setItem('userInfo', JSON.stringify(response.data));
-            console.log(`[LoginComponent] - Token received and stored: '${response.data.token}' for user: ${email} in component: 'Login', function: 'handleSubmit'`);
 
             // Call the login function from the context to set isLoggedIn to true
             login();

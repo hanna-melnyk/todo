@@ -29,26 +29,14 @@ export const FilterTag = ({ type, value, name, onValueChange, onDelete, allTags 
         if (type === 'tags') {
             const searchValue = newValue.split(',').pop().trim();
             const selectedTags = newValue.split(',').map((tag) => tag.trim()).filter((tag) => tag !== ''); // Get existing tags
-            console.log("Filtering tags based on:", searchValue); // Debug the input value for filtering
 
             const filtered = allTags
                 .filter((tag) => tag.toLowerCase().includes(searchValue.toLowerCase())) // Match with input
                 .filter((tag) => !selectedTags.includes(tag)); // Exclude already selected tags
-            console.log("Filtered tags:", filtered); // Check filtered tags result
+
             setFilteredTags(filtered);
         }
     };
-
-    /*Developer log to check if allTags is correctly passed*/
-    useEffect(() => {
-        console.log("Received allTags in FilterTag:", allTags); // Check if allTags is passed correctly
-    }, [allTags]);
-
-    /*Developer log to check if filteredTags is updating*/
-    useEffect(() => {
-        console.log("Filtered Tags Updated:", filteredTags);
-    }, [filteredTags]);
-
 
 
 

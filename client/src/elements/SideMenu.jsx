@@ -79,7 +79,6 @@ export const SideMenu = () => {
 
             const constructedPath = `${baseURL}/${profileImagePath.replace(/\\/g, '/')}`;
             setImagePath(constructedPath);
-            console.log("Constructed image path:", constructedPath);  // Log the constructed path for debugging
         }
     }, [user.profileImage, baseURL]);
 

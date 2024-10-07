@@ -28,11 +28,8 @@ export const TodoList = ({ todos, setTodos, searchParams, setAllTags, allTags })
 
     const fetchTodos = async (params = {}) => {
         try {
-            /*Developer log to see params*/
-            console.log("Fetching todos with params:", params);
             const response = await fetchTodosRequest(params);
             const todos = response.data;
-            console.log("Todos received:", todos);  // Log todos received
             setTodos(todos);
 
             // Extract unique tags and update the parent `allTags`
@@ -134,15 +131,12 @@ export const TodoList = ({ todos, setTodos, searchParams, setAllTags, allTags })
     // Update the input field when a tag is clicked
     const handleTagClick = (tag, event) => {
         event.stopPropagation(); // Prevent click event from propagating
-        console.log("Tag Clicked:", tag); // Log the clicked tag
         // Split the current input by commas to handle multiple tags
         const tagsArray = tags.split(',').map(tag => tag.trim());
-        console.log("Before Update:", tagsArray); // Log the state before updating
         // Replace the last fragment with the selected tag
         tagsArray[tagsArray.length - 1] = tag;
         // Join the updated tags and add a comma
         const updatedTags = tagsArray.filter(t => t !== '').join(', ') + ', ';
-        console.log("After Update:", updatedTags); // Log the updated tags string
         setTags(updatedTags);
         setFilteredTags([]);
         inputRef.current.focus(); // Keep focus on the input field

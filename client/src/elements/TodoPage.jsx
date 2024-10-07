@@ -56,12 +56,6 @@ export const TodoPage = () => {
     };
 
 
-/*useEffect for debugging purposes*/
-    useEffect(() => {
-        console.log("Updated All Tags in TodoPage:", allTags);  // Log updated tags in `TodoPage`
-    }, [allTags]);
-
-
 
     // Define the search handler
     const handleSearch = (params) => {
