@@ -58,7 +58,7 @@ export const Register = () => {
                         placeholder="Enter your password"
                     />
                 </FormControl>
-                <Button type="submit" colorScheme="purple" width="full" mt={4}>
+                <Button type="submit" bg="#611FEA" _hover={{ bg: "#5316C4" }} width="full" mt={4}>
                     Register
                 </Button>
             </form>

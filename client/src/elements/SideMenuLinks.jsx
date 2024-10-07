@@ -19,6 +19,8 @@ export const GuestLinks = () => {
                     to="/login"
                     icon={<FiLogIn />}
                     aria-label="Login"
+                    bg={"transparent"}
+                    _hover={{ bg: "#5316C4" }}
                 />
             </Tooltip>
             <Tooltip label="Register" placement="right">
@@ -27,6 +29,8 @@ export const GuestLinks = () => {
                     to="/register"
                     icon={<FiUserPlus />}
                     aria-label="Register"
+                    bg={"transparent"}
+                    _hover={{ bg: "#5316C4" }}
                 />
             </Tooltip>
         </VStack>
