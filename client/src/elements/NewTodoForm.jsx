@@ -69,6 +69,9 @@ export const NewTodoForm = ({ addTodo, onCancel, allTags }) => {
                 onChange={(e) => setTodoName(e.target.value)}
                 placeholder="Add a new todo"
                 mb={2}
+                borderColor="#9B979A"
+                focusBorderColor="#7D44EE" // Change border color on focus
+                _hover={{ borderColor: "gray.500" }}
                 ref={inputRef} // Attach ref to focus automatically
             />
 
@@ -79,6 +82,9 @@ export const NewTodoForm = ({ addTodo, onCancel, allTags }) => {
                 onChange={(e) => setTags(e.target.value)}
                 placeholder="Add tags (comma separated)"
                 mb={4}
+                borderColor="#9B979A"
+                focusBorderColor="#7D44EE" // Change border color on focus
+                _hover={{ borderColor: "gray.500" }}
             />
 
             {/* Dropdown Tag Suggestions */}
@@ -127,7 +133,12 @@ export const NewTodoForm = ({ addTodo, onCancel, allTags }) => {
             >
                 Save
             </Button>
-            <Button variant="outline" onClick={onCancel}>
+            <Button
+                variant="outline"
+                onClick={onCancel}
+                borderColor="#9B979A"
+                _hover={{ borderColor: "gray.500" }}
+            >
                 Cancel
             </Button>
         </Box>

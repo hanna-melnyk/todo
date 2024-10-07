@@ -92,11 +92,9 @@ export const FilterForm = ({ allTags, onSearch }) => {
                         leftIcon={<AddIcon />}
                         colorScheme="gray"
                         borderRadius="md"
-
                         size="sm"
                         px={4}
                         py={2}
-                        bg="transparent"
                         boxShadow="none"
                     >
                         Add Filter
