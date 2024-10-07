@@ -2,7 +2,7 @@
 *node_modules
 *_test
 *test
-*_notes.js
+__notes.js
 
 # Logs
 *.log
