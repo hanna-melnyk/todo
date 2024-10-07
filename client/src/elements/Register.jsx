@@ -3,7 +3,7 @@ import React, { useState} from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Box, FormControl, FormLabel, Input, Button, Text, useColorMode } from '@chakra-ui/react';
-import { getTransparentContainerStyle } from '../theme-helper';
+import { getTransparentWhiteContainerStyle } from '../theme-helper';
 
 export const Register = () => {
     const [username, setUsername] = useState('');
@@ -27,7 +27,7 @@ export const Register = () => {
     };
 
     return (
-        <Box maxW="sm" mx="auto" mt={8} p={4} borderWidth="1px" borderRadius="lg" {...getTransparentContainerStyle(colorMode)}>
+        <Box maxW="sm" mx="auto" mt={8} p={4} borderWidth="1px" borderRadius="lg" {...getTransparentWhiteContainerStyle(colorMode)}>
             <Text fontSize="2xl" mb={4}>Register</Text>
             {error && <Text color="red.500" mb={4}>{error}</Text>}
             <form onSubmit={handleSubmit}>

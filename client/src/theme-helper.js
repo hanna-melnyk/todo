@@ -9,6 +9,7 @@
  * spread into components using the `{...functionName()}` syntax.
  */
 
+
 /**
  * Generates styles for transparent elements based on the current color mode.
  *
@@ -17,7 +18,37 @@
  */
 export const getTransparentContainerStyle = (colorMode) => ({
     // Apply different background colors based on the color mode
+    bg: "transparent",
+    color: colorMode === "light" ? "black" : "white",
+    borderRadius: "md",
+    borderColor: "transparent",
+    padding: "8px",
+});
+
+/**
+ * Generates styles for transparent elements based on the current color mode.
+ *
+ * @param {string} colorMode - The active color mode ("light" or "dark").
+ * @returns {Object} - An object containing style properties for ListItem.
+ */
+export const getTransparentWhiteContainerStyle = (colorMode) => ({
+    // Apply different background colors based on the color mode
     bg: colorMode === "light" ? "rgba(239, 239, 239, 0.8)" : "rgba(46, 46, 46, 0.8)",
+    color: colorMode === "light" ? "black" : "white",
+    borderRadius: "md",
+    padding: "8px",
+});
+
+
+/**
+ * Generates styles for transparent input forms based on the current color mode.
+ *
+ * @param {string} colorMode - The active color mode ("light" or "dark").
+ * @returns {Object} - An object containing style properties for ListItem.
+ */
+export const getTransparentGrayContainerStyle = (colorMode) => ({
+    // Apply different background colors based on the color mode
+    bg: colorMode === "light" ? "rgba(185,182,184, 0.8)" : "rgba(46, 46, 46, 0.8)",
     color: colorMode === "light" ? "black" : "white",
     borderRadius: "md",
     padding: "8px",

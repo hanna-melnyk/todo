@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react';
 import { EditIcon, DeleteIcon, AddIcon, CloseIcon } from '@chakra-ui/icons';
 import { useLogin } from '../contexts/LoginContext';
-import {getTransparentContainerStyle} from "../theme-helper.js";
+import {getTransparentWhiteContainerStyle} from "../theme-helper.js";
 import {fetchTodosRequest, updateTodoRequest, deleteTodoRequest, toggleTodoRequest } from "../api/requestService.js";
 
 
@@ -169,7 +169,7 @@ export const TodoList = ({ todos, setTodos, searchParams, setAllTags, allTags })
                             display="flex"
                             justifyContent="space-between"
                             alignItems="center"
-                            {...getTransparentContainerStyle(colorMode)} // Pass colorMode to getListItemStyles
+                            {...getTransparentWhiteContainerStyle(colorMode)} // Pass colorMode to getListItemStyles
                         >
                             <HStack flex="1" spacing={5} onClick={() => toggleTodo(todo)} cursor="pointer">
                                 <Checkbox

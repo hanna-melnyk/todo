@@ -8,6 +8,7 @@ import {FilterButton} from "./FilterButton.jsx";
 import {NewTodoForm} from "./NewTodoForm.jsx";
 import {FilterForm} from "./FilterForm.jsx";
 import authApi from "../api/axiosTokenInterceptor.js";
+import {getTransparentGrayContainerStyle} from "../theme-helper.js";
 
 export const TodoPage = () => {
     const [searchParams, setSearchParams] = useState({});  // State to hold search parameters
@@ -96,7 +97,7 @@ export const TodoPage = () => {
                             p={4}
                             borderWidth="1px"
                             borderRadius="md"
-                            {...getTransparentContainerStyle(colorMode)}
+                            {...getTransparentGrayContainerStyle(colorMode)}
                         >
                             <NewTodoForm
                                 addTodo={addTodo}
@@ -113,7 +114,7 @@ export const TodoPage = () => {
                             p={4}
                             borderWidth="1px"
                             borderRadius="md"
-                            {...getTransparentContainerStyle(colorMode)}
+                            {...getTransparentGrayContainerStyle(colorMode)}
                         >
                             <FilterForm
                                 allTags={allTags}

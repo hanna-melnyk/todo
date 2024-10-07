@@ -18,7 +18,7 @@ import {
     Center,
     useColorMode
 } from '@chakra-ui/react';
-import {getTransparentContainerStyle} from "../theme-helper.js";
+import {getTransparentWhiteContainerStyle} from "../theme-helper.js";
 import { useDropzone } from 'react-dropzone';
 
 export const Profile = () => {
@@ -133,7 +133,7 @@ export const Profile = () => {
     };
 
     return (
-        <Box {...getTransparentContainerStyle(colorMode)} maxW="sm" mx="auto" mt={8} >
+        <Box {...getTransparentWhiteContainerStyle(colorMode)} maxW="sm" mx="auto" mt={8} >
             <Heading size="lg" mb={6} color="purple.300">Profile</Heading>
             {error && (
                 <Alert status="error" mb={4}>
