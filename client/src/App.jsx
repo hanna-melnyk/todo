@@ -5,6 +5,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { SideMenu} from "./elements/SideMenu.jsx";
 import AppRoutes from './AppRoutes';
 import './background.css';
+import './index.css';
 
 
 
@@ -16,7 +17,7 @@ function App() {
             <Router>
                 <SideMenu/>
                 {/* Main content with left margin to make space for the sidebar */}
-                <div style={{ marginLeft: '60px', padding: '20px' }}>
+                <div style={{ marginLeft: '60px'}}>
                     <AppRoutes />
                 </div>
             </Router>
