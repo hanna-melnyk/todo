@@ -108,7 +108,7 @@ export const SideMenu = () => {
                 py={4}
             >
                 <VStack spacing={4}>
-                    <Tooltip label="Show menu" placement="right">
+                    {isLoggedIn ? <Tooltip label="Show menu" placement="right">
                         <IconButton
                             icon={<FiSidebar />}
                             aria-label="Toggle Sidebar"
@@ -119,7 +119,7 @@ export const SideMenu = () => {
                             color="white"
                             variant="solid"
                         />
-                    </Tooltip>
+                    </Tooltip> : null}
                     {isLoggedIn ? <CustomerLinks handleLogout={handleLogout} /> : <GuestLinks />}
                 </VStack>
 

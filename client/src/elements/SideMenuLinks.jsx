@@ -20,6 +20,7 @@ export const GuestLinks = () => {
                     icon={<FiLogIn />}
                     aria-label="Login"
                     bg={"transparent"}
+                    color="white"
                     _hover={{ bg: "#5316C4" }}
                 />
             </Tooltip>
@@ -30,6 +31,7 @@ export const GuestLinks = () => {
                     icon={<FiUserPlus />}
                     aria-label="Register"
                     bg={"transparent"}
+                    color="white"
                     _hover={{ bg: "#5316C4" }}
                 />
             </Tooltip>
