@@ -1,56 +1,25 @@
 //client/src/elements/AboutPage.jsx
-import React from 'react';
-import { Box, Text, Flex, Grid, GridItem, Link, Image } from "@chakra-ui/react";
-// import { ReactComponent as BrainSvg } from '../assets/brain-illustration-4-svgrepo-com.svg';
+import { useEffect, useState }  from 'react';
+import { Box, Text, Flex, Grid, GridItem, Link, Image, Button, useColorModeValue  } from "@chakra-ui/react";
+import { ArrowForwardIcon } from '@chakra-ui/icons';
+import BrainSvg from '../assets/brain.svg';
 
 export const AboutPage = () => {
+    const [iconRotation, setIconRotation] = useState('-45deg'); // Rotate arrow
+
+    // Use color mode values for background and text/icon colors
+    const bgColor = useColorModeValue("#EFEFEF", "#141414");
+    const buttonBgColor = useColorModeValue("#141414", "#EFEFEF");
+    const buttonTextColor = useColorModeValue("#EFEFEF", "#141414");
+
     return (
         <>
-            {/* First Viewport: "How many tasks" */}
+
+            {/* "Free your mind from unnecessary worries" */}
             <Box
                 height="100vh"
                 display="flex"
-                justifyContent="center"
-                alignItems="center"
-                flexDirection="column"
-                bg="transparent"
-                textAlign="center"
-            >
-                {/* First Line: Large Text "How many tasks" */}
-                <Text
-                    fontSize={{ base: "60px", md: "80px", lg: "120px" }}  // Very large font size
-                    fontFamily="Oswald, sans-serif"
-                    fontWeight="800"
-                    lineHeight="1.2"  // Adjust line height for better spacing
-                >
-                    How many tasks
-                </Text>
-
-                {/* Second Line: Two containers side by side */}
-                <Flex
-                    justifyContent="center"
-                    alignItems="center"
-                    mt={5}  // Margin top to separate the second line
-                    gap={10}  // Gap between the text and the brain image
-                >
-                    {/* Left Container: Text "are on your mind right now?" */}
-                    <Text
-                        fontSize={{ base: "24px", md: "36px", lg: "48px" }}  // Smaller font size for the second line
-                        fontFamily="Oswald, sans-serif"
-                        fontWeight="700"
-                    >
-                        are on your mind right now?
-                    </Text>
-
-                    {/* Right Container: Brain SVG Image */}
-                    {/*<BrainSvg width="100%" height="100%" />*/}
-                </Flex>
-            </Box>
-
-            {/* Second Viewport: "Organize your day with a simple tool" */}
-            <Box
-                height="100vh"
-                display="flex"
+                flexDirection={"column"}
                 justifyContent="center"
                 alignItems="center"
                 bg="transparent"
@@ -59,30 +28,46 @@ export const AboutPage = () => {
                     fontSize={{ base: "60px", md: "80px", lg: "100px" }}  // Custom font sizes
                     textAlign="center"
                     maxW="1000px"
-                    fontFamily="Oswald, sans-serif"
-                    fontWeight="700"
-                >
-                    Organize your day with a simple tool
-                </Text>
-            </Box>
-
-            {/* Third Viewport: "Free your mind from unnecessary worries" */}
-            <Box
-                height="100vh"
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                bg="transparent"
-            >
-                <Text
-                    fontSize={{ base: "60px", md: "80px", lg: "100px" }}  // Custom font sizes
-                    textAlign="center"
-                    maxW="1000px"
-                    fontFamily="Oswald, sans-serif"
+                    fontFamily="Anton, sans-serif"
                     fontWeight="700"
                 >
                     Free your mind from unnecessary worries
+
                 </Text>
+                <Text
+                    bg={bgColor}
+                    fontSize={{ base: "10px", md: "30px", lg: "50px" }}
+                    fontFamily="Roboto Condensed, sans-serif"  // Roboto Condensed font applied
+                    fontWeight="100"  // Thin weight
+                >Organize your day with a simple tool</Text>
+
+                {/* Button added below the text */}
+                <Button
+                    mt="20px"  // Add margin to separate it from the text
+                    rightIcon={
+                        <Box
+                            bg={buttonTextColor}   // White background for the circle
+                            borderRadius="50%"  // Makes the box a circle
+                            p="1px"  // Padding inside the circle
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                        >
+                            <ArrowForwardIcon
+                                color={buttonBgColor}  // Arrow color to match background
+                                style={{ transform: 'rotate(-45deg)' }}  // Rotate arrow to match example
+                            />
+                        </Box>
+                    }
+                    borderRadius="8px"  // Slightly rounded borders for the rectangular button
+                    size="lg"  // Large size for the button
+                    bg={buttonBgColor}  // Custom background color to match the image style
+                    color={buttonTextColor}  // Text color
+                    _hover={{ bg: "#000" }}  // Hover effect
+                >
+                    Get started
+                </Button>
+
             </Box>
 
             {/* Features Section */}
