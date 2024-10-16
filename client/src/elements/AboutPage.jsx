@@ -2,7 +2,8 @@
 import { useEffect, useState }  from 'react';
 import { Box, Text, Flex, Grid, GridItem, Link, Image, Button, useColorModeValue  } from "@chakra-ui/react";
 import { ArrowForwardIcon } from '@chakra-ui/icons';
-import BrainSvg from '../assets/brain.svg';
+import {FiGithub, FiLinkedin, FiMail} from 'react-icons/fi';
+import { Link as RouterLink } from 'react-router-dom';
 
 export const AboutPage = () => {
     const [iconRotation, setIconRotation] = useState('-45deg'); // Rotate arrow
@@ -42,6 +43,7 @@ export const AboutPage = () => {
                 >Organize your day with a simple tool</Text>
 
                 {/* Button added below the text */}
+                <RouterLink to="/login">
                 <Button
                     mt="20px"  // Add margin to separate it from the text
                     rightIcon={
@@ -67,7 +69,7 @@ export const AboutPage = () => {
                 >
                     Get started
                 </Button>
-
+                </RouterLink>
             </Box>
 
             {/* Features Section */}
@@ -111,19 +113,19 @@ export const AboutPage = () => {
 
             {/* Footer Section */}
             <Box bg="gray.800" color="white" py="20px" textAlign="center">
-                <Text fontSize="lg">Contact us:</Text>
+
                 <Flex justifyContent="center" mt="10px">
-                    <Link href="https://facebook.com" mx="10px">
-                        Facebook
+                    <Text style={{ opacity: 0.7 }} _hover={{ opacity: 1 }} >Connect:</Text>
+                    <Link href="https://github.com/hanna-melnyk" mx="10px" isExternal>
+                        <FiGithub size={24} style={{ opacity: 0.7 }} _hover={{ opacity: 1 }} />
                     </Link>
-                    <Link href="https://twitter.com" mx="10px">
-                        Twitter
+
+                    <Link href="https://www.linkedin.com/in/hanna--melnyk/" mx="10px" isExternal>
+                        <FiLinkedin size={24} style={{ opacity: 0.7 }} _hover={{ opacity: 1 }} />
                     </Link>
-                    <Link href="https://instagram.com" mx="10px">
-                        Instagram
-                    </Link>
-                    <Link href="mailto:info@yourapp.com" mx="10px">
-                        Email
+
+                    <Link href="mailto:hanna.melnk@gmail.com" mx="10px">
+                        <FiMail size={24} style={{ opacity: 0.7 }} _hover={{ opacity: 1 }} />
                     </Link>
                 </Flex>
             </Box>

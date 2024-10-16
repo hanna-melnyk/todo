@@ -50,7 +50,7 @@ export const GuestLinks = () => {
 export const CustomerLinks = ({ buttonVariant = "icon", handleLogout }) => {
     return (
         <VStack spacing={4} my={4}>
-            <SideMenuButton to="/" icon={<FiHome />} text="Home" buttonVariant={buttonVariant} />
+            <SideMenuButton to="/dashboard" icon={<FiHome />} text="Dashboard" buttonVariant={buttonVariant} />
             <SideMenuButton to="/profile" icon={<FiUser />} text="Profile" buttonVariant={buttonVariant} />
             <SideMenuButton onClick={handleLogout} icon={<FiLogOut />} text="Logout" buttonVariant={buttonVariant} />
         </VStack>
